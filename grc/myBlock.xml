@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<block>
+  <name>grcName</name>
+  <key>myBlock</key>
+  <category>grcCategory</category>
+  <import>import myModule</import>
+  <make>myModule.make_myBlock($grcParam1)</make>
+  <callback>set_param1($grcParam1)</callback>
+    
+
+  <param>
+    <name>grcParam1Name</name>
+    <key>grcParam1</key>
+    <value>1</value>
+    <type>grcParam1Type</type>
+  </param>
+
+  <check>checkRule</check>
+
+  <sink>
+    <name>in</name>
+    <type>float</type>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>float</type>
+  </source>
+</block>
