@@ -47,7 +47,8 @@
 openmind_buspirate_source_sptr
 make_openmind_buspirate_source (const std::string& device)
 {
-  return openmind_buspirate_source_sptr(new openmind_buspirate_source(device));  
+	printf("make_openmind_buspirate_source called.\n");
+	return openmind_buspirate_source_sptr(new openmind_buspirate_source(device));  
 }
 
 /*
@@ -71,7 +72,7 @@ openmind_buspirate_source::openmind_buspirate_source (const std::string& device)
 		   gr_make_io_signature (MIN_OUT, MAX_OUT, sizeof(short))),
 		   d_device(device)
 {
-  
+	printf("Created openmind buspirate source for %s\n", device.c_str());
 }
 
 /*
@@ -80,6 +81,10 @@ openmind_buspirate_source::openmind_buspirate_source (const std::string& device)
 openmind_buspirate_source::~openmind_buspirate_source ()
 {
 	//Nothing do here (yet) 
+}
+
+void openmind_buspirate_source::test(std::string arg){
+	printf("bar: %s\n", arg.c_str());
 }
 
 int 

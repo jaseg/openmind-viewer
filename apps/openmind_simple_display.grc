@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Fri Aug 12 18:17:58 2011</timestamp>
+  <timestamp>Tue Sep 27 16:50:08 2011</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -49,7 +49,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(11, 15)</value>
+      <value>(10, 10)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -91,7 +91,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(411, 94)</value>
+      <value>(399, 83)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -158,7 +158,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(666, 81)</value>
+      <value>(634, 72)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -166,18 +166,22 @@
     </param>
   </block>
   <block>
-    <key>openmind_buspirate_source_s</key>
+    <key>openmind_buspirate_source</key>
     <param>
       <key>id</key>
-      <value>openmind_buspirate_source_s_0</value>
+      <value>openmind_buspirate_source_0</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
+      <key>device</key>
+      <value>/dev/ttyUSB0</value>
+    </param>
+    <param>
       <key>_coordinate</key>
-      <value>(136, 94)</value>
+      <value>(174, 79)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -185,14 +189,14 @@
     </param>
   </block>
   <connection>
-    <source_block_id>openmind_buspirate_source_s_0</source_block_id>
-    <sink_block_id>gr_interleaved_short_to_complex_0</sink_block_id>
+    <source_block_id>gr_interleaved_short_to_complex_0</source_block_id>
+    <sink_block_id>wxgui_scopesink2_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_interleaved_short_to_complex_0</source_block_id>
-    <sink_block_id>wxgui_scopesink2_0</sink_block_id>
+    <source_block_id>openmind_buspirate_source_0</source_block_id>
+    <sink_block_id>gr_interleaved_short_to_complex_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

@@ -509,11 +509,6 @@ MOSTLYCLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc *.pyo *~ *.tmp \
 
 # Do not distribute the output of SWIG
 @PYTHON_TRUE@no_dist_files = $(swig_built_sources)
-
-# additional SWIG files to be installed
-@PYTHON_TRUE@openmind_swiginclude_headers = \
-@PYTHON_TRUE@	openmind.i
-
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -974,6 +969,10 @@ dist-hook:
 # we have accurate dependencies for our swig stuff, which is good.
 
 @PYTHON_TRUE@@am__include@ @am__quote@./$(DEPDIR)/openmind.d@am__quote@
+
+# additional SWIG files to be installed
+#openmind_swiginclude_headers =
+#	openmind.i
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

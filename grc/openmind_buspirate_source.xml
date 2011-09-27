@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <block>
-  <name>grcName</name>
+  <name>buspirate source</name>
   <key>openmind_buspirate_source</key>
-  <category>grcCategory</category>
+  <category>openmind</category>
   <import>import openmind</import>
   <make>openmind.make_openmind_buspirate_source($device)</make>
     
@@ -14,10 +14,8 @@
     <type>string</type>
   </param>
 
-  <check>checkRule</check>
-
   <source>
     <name>out</name>
-    <type>float</type>
+    <type>short</type>
   </source>
 </block>

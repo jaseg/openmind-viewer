@@ -47,7 +47,7 @@ BUILT_SOURCES = $(swig_built_sources)
 no_dist_files = $(swig_built_sources)
 
 # additional SWIG files to be installed
-openmind_swiginclude_headers = \
-	openmind.i
+#openmind_swiginclude_headers =
+#	openmind.i
 
 endif

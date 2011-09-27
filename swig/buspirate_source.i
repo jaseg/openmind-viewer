@@ -12,5 +12,6 @@ private:
 
 public:
   std::string device () const { return d_device; }
+  void test(std::string arg);
 
 };

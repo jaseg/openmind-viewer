@@ -70,13 +70,14 @@ private:
   openmind_buspirate_source (const std::string& device);  	// private constructor  
 
  public:
-  const std::string& device() const { return d_device; }
-  //There is no setter method since d_device is constant during the block's run-time
-
   ~openmind_buspirate_source ();	// public destructor
 
-  // Where all the action really happens
+  //There is only a getter method since d_device is constant during the block's run-time
+  const std::string& device() const { return d_device; }
 
+  void test (std::string arg);
+
+  // Where all the action really happens
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,
 	    gr_vector_void_star &output_items);
