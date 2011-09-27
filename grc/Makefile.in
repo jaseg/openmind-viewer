@@ -353,7 +353,7 @@ STAMPS =
 MOSTLYCLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc *.pyo *~ *.tmp *.loT
 grcblocksdir = $(grc_blocksdir)
 dist_grcblocks_DATA = \
-	openmind_source.xml
+	openmind_buspirate_source.xml
 
 all: all-am
 
