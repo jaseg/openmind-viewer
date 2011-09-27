@@ -133,7 +133,7 @@ am__base_list = \
 am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(modincludedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libgnuradio_openmind_la_DEPENDENCIES =
-am_libgnuradio_openmind_la_OBJECTS = openmind_source.lo
+am_libgnuradio_openmind_la_OBJECTS = openmind_buspirate_source.lo
 libgnuradio_openmind_la_OBJECTS =  \
 	$(am_libgnuradio_openmind_la_OBJECTS)
 libgnuradio_openmind_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
@@ -388,11 +388,11 @@ TESTS = test_all
 
 # C/C++ headers get installed in ${prefix}/include/$(modname)
 modinclude_HEADERS = \
-	openmind_source.h
+	openmind_buspirate_source.h
 
 lib_LTLIBRARIES = libgnuradio-openmind.la
 libgnuradio_openmind_la_SOURCES = \
-	openmind_source.cc
+	openmind_buspirate_source.cc
 
 libgnuradio_openmind_la_LIBADD = \
 	$(GNURADIO_CORE_LA)
@@ -472,7 +472,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/openmind_source.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/openmind_buspirate_source.Plo@am__quote@
 
 .cc.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

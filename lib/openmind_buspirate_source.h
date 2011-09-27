@@ -19,14 +19,14 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
-#ifndef INCLUDED_OPENMIND_SOURCE_H
-#define INCLUDED_OPENMIND_SOURCE_H
+#ifndef INCLUDED_BUSPIRATE_SOURCE_H
+#define INCLUDED_BUSPIRATE_SOURCE_H
 
 #include <gr_sync_block.h>
 
 #define ADS_VREF 4.096
 
-class openmind_source;
+class openmind_buspirate_source;
 
 /*
  * We use boost::shared_ptr's instead of raw pointers for all access
@@ -39,7 +39,7 @@ class openmind_source;
  *
  * As a convention, the _sptr suffix indicates a boost::shared_ptr
  */
-typedef boost::shared_ptr<openmind_source> openmind_source_sptr;
+typedef boost::shared_ptr<openmind_buspirate_source> openmind_buspirate_source_sptr;
 
 /*!
  * \brief Return a shared_ptr to a new instance of myBlock.
@@ -48,7 +48,7 @@ typedef boost::shared_ptr<openmind_source> openmind_source_sptr;
  * constructor is private.  myBlock is the public
  * interface for creating new instances.
  */
-openmind_source_sptr make_openmind_source (const std::string& device);
+openmind_buspirate_source_sptr make_openmind_buspirate_source (const std::string& device);
 
 /*!
  * \brief amplify a stream of floats.
@@ -56,24 +56,24 @@ openmind_source_sptr make_openmind_source (const std::string& device);
  *
  * This uses the preferred technique: subclassing gr_sync_block.
  */
-class openmind_source : public gr_sync_block
+class openmind_buspirate_source : public gr_sync_block
 {
 private:
   // The friend declaration allows myBlock to
   // access the private constructor.
 
-  friend openmind_source_sptr make_openmind_source (const std::string& device);  
+  friend openmind_buspirate_source_sptr make_openmind_buspirate_source (const std::string& device);  
 
   const std::string d_device;
   int port_fd;
 
-  openmind_source (const std::string& device);  	// private constructor  
+  openmind_buspirate_source (const std::string& device);  	// private constructor  
 
  public:
   const std::string& device() const { return d_device; }
   //There is no setter method since d_device is constant during the block's run-time
 
-  ~openmind_source ();	// public destructor
+  ~openmind_buspirate_source ();	// public destructor
 
   // Where all the action really happens
 
@@ -83,4 +83,4 @@ private:
   bool start();
 };
 
-#endif /* INCLUDED_OPENMIND_SOURCE_H */
+#endif /* INCLUDED_BUSPIRATE_SOURCE_H */

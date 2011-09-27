@@ -30,12 +30,12 @@ TESTS = test_all
 
 # C/C++ headers get installed in ${prefix}/include/$(modname)
 modinclude_HEADERS = \
-	openmind_source.h
+	openmind_buspirate_source.h
 
 lib_LTLIBRARIES = libgnuradio-openmind.la
 
 libgnuradio_openmind_la_SOURCES = \
-	openmind_source.cc
+	openmind_buspirate_source.cc
 
 libgnuradio_openmind_la_LIBADD = \
 	$(GNURADIO_CORE_LA)

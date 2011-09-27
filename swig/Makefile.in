@@ -472,9 +472,9 @@ MOSTLYCLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc *.pyo *~ *.tmp \
 
 @PYTHON_TRUE@STD_SWIG_CXX_FLAGS = @swig_CXXFLAGS@
 @PYTHON_TRUE@SUFFIXES = .i
-@PYTHON_TRUE@swig_built_sources = openmind_swig.py @NAME@_swig.cc
-@PYTHON_TRUE@openmind_pythondir = $(pythondir)/@NAME@
-@PYTHON_TRUE@openmind_pylibdir = $(pyexecdir)/@NAME@
+@PYTHON_TRUE@swig_built_sources = openmind_swig.py openmind_swig.cc
+@PYTHON_TRUE@openmind_pythondir = $(pythondir)/openmind
+@PYTHON_TRUE@openmind_pylibdir = $(pyexecdir)/openmind
 @PYTHON_TRUE@openmind_swigincludedir = $(swigincludedir)
 @PYTHON_TRUE@openmind_swiginclude_HEADERS = \
 @PYTHON_TRUE@	openmind.i			\
@@ -933,7 +933,7 @@ dist-hook:
 @PYTHON_TRUE@		exit -1; \
 @PYTHON_TRUE@	fi;
 
-@PYTHON_TRUE@openmind.h @NAME@_swig.py @NAME@_swig.cc: @NAME@.i
+@PYTHON_TRUE@openmind.h openmind_swig.py openmind_swig.cc: openmind.i
 @PYTHON_TRUE@	trap 'rm -rf $(DEPDIR)/openmind-generate-*' 1 2 13 15; \
 @PYTHON_TRUE@	if mkdir $(DEPDIR)/openmind-generate-lock 2>/dev/null; then \
 @PYTHON_TRUE@		rm -f $(DEPDIR)/openmind-generate-stamp; \
@@ -950,19 +950,19 @@ dist-hook:
 @PYTHON_TRUE@$(DEPDIR)/openmind-generate-stamp:
 @PYTHON_TRUE@	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(openmind_swig_args) \
 @PYTHON_TRUE@		-MD -MF $(DEPDIR)/openmind.Std \
-@PYTHON_TRUE@		-module openmind_swig -o @NAME@_swig.cc $(WHAT); then \
+@PYTHON_TRUE@		-module openmind_swig -o openmind_swig.cc $(WHAT); then \
 @PYTHON_TRUE@	    if test $(host_os) = mingw32; then \
 @PYTHON_TRUE@		$(RM) $(DEPDIR)/openmind.Sd; \
 @PYTHON_TRUE@		$(SED) 's,\\\\,/,g' < $(DEPDIR)/openmind.Std \
 @PYTHON_TRUE@			> $(DEPDIR)/openmind.Sd; \
 @PYTHON_TRUE@		$(RM) $(DEPDIR)/openmind.Std; \
-@PYTHON_TRUE@		$(MV) $(DEPDIR)/openmind.Sd $(DEPDIR)/@NAME@.Std; \
+@PYTHON_TRUE@		$(MV) $(DEPDIR)/openmind.Sd $(DEPDIR)/openmind.Std; \
 @PYTHON_TRUE@	    fi; \
 @PYTHON_TRUE@	else \
 @PYTHON_TRUE@	    $(RM) $(DEPDIR)/openmind.S*; exit 1; \
 @PYTHON_TRUE@	fi;
 @PYTHON_TRUE@	$(RM) $(DEPDIR)/openmind.d
-@PYTHON_TRUE@	cp $(DEPDIR)/openmind.Std $(DEPDIR)/@NAME@.d
+@PYTHON_TRUE@	cp $(DEPDIR)/openmind.Std $(DEPDIR)/openmind.d
 @PYTHON_TRUE@	echo "" >> $(DEPDIR)/openmind.d
 @PYTHON_TRUE@	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/openmind.Std | \
 @PYTHON_TRUE@		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/openmind.d

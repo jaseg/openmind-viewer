@@ -33,8 +33,8 @@
 ## this has to be done in the including Makefile.am -before-
 ## Makefile.swig is included.
 
-openmind_pythondir = $(pythondir)/@NAME@
-openmind_pylibdir = $(pyexecdir)/@NAME@
+openmind_pythondir = $(pythondir)/openmind
+openmind_pylibdir = $(pyexecdir)/openmind
 
 ## SWIG headers are always installed into the same directory.
 
@@ -70,7 +70,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += openmind_swig.py @NAME@_swig.cc
+swig_built_sources += openmind_swig.py openmind_swig.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -105,7 +105,7 @@ openmind_python_PYTHON =			\
 
 ## Entry rule for running SWIG
 
-openmind.h @NAME@_swig.py @NAME@_swig.cc: @NAME@.i
+openmind.h openmind_swig.py openmind_swig.cc: openmind.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -200,13 +200,13 @@ $(DEPDIR)/openmind-generate-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(openmind_swig_args) \
 		-MD -MF $(DEPDIR)/openmind.Std \
-		-module openmind_swig -o @NAME@_swig.cc $(WHAT); then \
+		-module openmind_swig -o openmind_swig.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/openmind.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/openmind.Std \
 			> $(DEPDIR)/openmind.Sd; \
 		$(RM) $(DEPDIR)/openmind.Std; \
-		$(MV) $(DEPDIR)/openmind.Sd $(DEPDIR)/@NAME@.Std; \
+		$(MV) $(DEPDIR)/openmind.Sd $(DEPDIR)/openmind.Std; \
 	    fi; \
 	else \
 	    $(RM) $(DEPDIR)/openmind.S*; exit 1; \
@@ -225,7 +225,7 @@ $(DEPDIR)/openmind-generate-stamp:
 ##
 ## (2) Copy the whole SWIG file:
 ##
-	cp $(DEPDIR)/openmind.Std $(DEPDIR)/@NAME@.d
+	cp $(DEPDIR)/openmind.Std $(DEPDIR)/openmind.d
 ##
 ## (3) all a carriage return to the end of the dependency file.
 ##

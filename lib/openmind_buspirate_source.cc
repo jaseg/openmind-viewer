@@ -37,17 +37,17 @@
 #include <errno.h>   /* Error number definitions */
 #include <termios.h> /* POSIX terminal control definitions */
 
-#include <openmind_source.h>
+#include <openmind_buspirate_source.h>
 #include <gr_io_signature.h>
 
 /*
  * Create a new instance of myBlock and return
  * a boost shared_ptr.  This is effectively the public constructor.
  */
-openmind_source_sptr
-make_openmind_source (const std::string& device)
+openmind_buspirate_source_sptr
+make_openmind_buspirate_source (const std::string& device)
 {
-  return openmind_source_sptr(new openmind_source(device));  
+  return openmind_buspirate_source_sptr(new openmind_buspirate_source(device));  
 }
 
 /*
@@ -65,8 +65,8 @@ static const int MAX_OUT = 4;	// maximum number of output streams
 /*
  * The private constructor
  */
-openmind_source::openmind_source (const std::string& device)
-  : gr_sync_block ("openmind_source",
+openmind_buspirate_source::openmind_buspirate_source (const std::string& device)
+  : gr_sync_block ("openmind_buspirate_source",
 		   gr_make_io_signature (0, 0, 0),
 		   gr_make_io_signature (MIN_OUT, MAX_OUT, sizeof(short))),
 		   d_device(device)
@@ -77,13 +77,13 @@ openmind_source::openmind_source (const std::string& device)
 /*
  * Our virtual destructor.
  */
-openmind_source::~openmind_source ()
+openmind_buspirate_source::~openmind_buspirate_source ()
 {
 	//Nothing do here (yet) 
 }
 
 int 
-openmind_source::work (int noutput_items,
+openmind_buspirate_source::work (int noutput_items,
 			gr_vector_const_void_star &input_items,
 			gr_vector_void_star &output_items)
 {
@@ -157,7 +157,7 @@ openmind_source::work (int noutput_items,
 	return sample_count;
 }
 
-bool openmind_source::start(){
+bool openmind_buspirate_source::start(){
 	struct timeval universal_timeout = {0, 1000};
 	port_fd = open(d_device.c_str(), O_RDWR | O_NOCTTY | O_NDELAY);
 	fd_set port_fds;
