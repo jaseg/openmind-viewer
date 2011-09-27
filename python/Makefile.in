@@ -359,7 +359,7 @@ modpython_PYTHON = \
 	__init__.py
 
 noinst_PYTHON = \
-	qa_my.py			
+	qa_openmind.py			
 
 all: all-am
 

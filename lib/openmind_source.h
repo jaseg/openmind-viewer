@@ -24,6 +24,8 @@
 
 #include <gr_sync_block.h>
 
+#define ADS_VREF 4.096
+
 class openmind_source;
 
 /*
@@ -46,7 +48,7 @@ typedef boost::shared_ptr<openmind_source> openmind_source_sptr;
  * constructor is private.  myBlock is the public
  * interface for creating new instances.
  */
-openmind_source_sptr make_openmind_source (int param1);
+openmind_source_sptr make_openmind_source (const std::string& device);
 
 /*!
  * \brief amplify a stream of floats.
@@ -60,15 +62,16 @@ private:
   // The friend declaration allows myBlock to
   // access the private constructor.
 
-  friend openmind_source_sptr make_openmind_source (int param1);  
+  friend openmind_source_sptr make_openmind_source (const std::string& device);  
 
-  int d_param1;
+  const std::string d_device;
+  int port_fd;
 
-  openmind_source (int param1);  	// private constructor  
+  openmind_source (const std::string& device);  	// private constructor  
 
  public:
-  int param1 () const { return d_param1; }
-  void set_param1 (int param1) { d_param1 = param1; }
+  const std::string& device() const { return d_device; }
+  //There is no setter method since d_device is constant during the block's run-time
 
   ~openmind_source ();	// public destructor
 

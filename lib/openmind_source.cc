@@ -29,6 +29,14 @@
 #include "config.h"
 #endif
 
+//FIXME Unix include stuff. Cleanup necessary.
+#include <stdio.h>   /* Standard input/output definitions */
+#include <string.h>  /* String function definitions */
+#include <unistd.h>  /* UNIX standard function definitions */
+#include <fcntl.h>   /* File control definitions */
+#include <errno.h>   /* Error number definitions */
+#include <termios.h> /* POSIX terminal control definitions */
+
 #include <openmind_source.h>
 #include <gr_io_signature.h>
 
@@ -36,10 +44,10 @@
  * Create a new instance of myBlock and return
  * a boost shared_ptr.  This is effectively the public constructor.
  */
-openmind_source 
-make_openmind_source (int param1)
+openmind_source_sptr
+make_openmind_source (const std::string& device)
 {
-  return openmind_source_sptr (new openmind_source(param1));  
+  return openmind_source_sptr(new openmind_source(device));  
 }
 
 /*
@@ -57,11 +65,11 @@ static const int MAX_OUT = 4;	// maximum number of output streams
 /*
  * The private constructor
  */
-openmind_source::openmind_source (int param1)
+openmind_source::openmind_source (const std::string& device)
   : gr_sync_block ("openmind_source",
 		   gr_make_io_signature (0, 0, 0),
 		   gr_make_io_signature (MIN_OUT, MAX_OUT, sizeof(short))),
-		   d_param1 (param1)
+		   d_device(device)
 {
   
 }
@@ -117,7 +125,7 @@ openmind_source::work (int noutput_items,
 				break;
 			}
 		}
-		*bufp = \0;
+		*bufp = '\0';
 		if(error_code != 1){
 			//FIXME what to do with errors in here??
 		}else{
@@ -130,7 +138,8 @@ openmind_source::work (int noutput_items,
 			while(token = strtok_r(buf, " ", &saveptr)){
 				/// \todo automatic vref acquisition
 				char* endptr;
-				*current_items[i] = (short int)(strtol(token, &endptr, 16)/(ADS_VREF/((2^15)-1.0F)));
+				//FIXME The following line is pretty certainly crap inherited from previous versions of this code.
+				*current_items[i] = (short int)(strtol(token, &endptr, 16));// /(ADS_VREF/((2^15)-1.0F)));
 				if(*endptr != 0){
 					//An error occured (most likely some glitch between this code and the openmind firmware).
 					//FIXME implement some error handling *here*
@@ -145,26 +154,27 @@ openmind_source::work (int noutput_items,
 		}
 
 	}
-	return sampe_count;
+	return sample_count;
 }
 
 bool openmind_source::start(){
-	port_fd = open(device.c_str(), O_RDWR | O_NOCTTY | O_NDELAY);
-	if(fd == -1){
+	struct timeval universal_timeout = {0, 1000};
+	port_fd = open(d_device.c_str(), O_RDWR | O_NOCTTY | O_NDELAY);
+	fd_set port_fds;
+	if(port_fd == -1){
 		return false; //I'm guessing this is the "failure" return value.
 	}
-	fnctl(port_fd, F_SETFL, 0);
+	fcntl(port_fd, F_SETFL, 0);
 	struct termios options;
 	tcgetattr(port_fd, &options);
 	//Set baud rate to 115200 Bd (BusPirate standard)
-	cfsetispeed(&options, B_115200);
-	cfsetospeed(&options, B_115200);
+	cfsetspeed(&options, B115200);
     options.c_cflag |= (CLOCAL | CREAD); //Enable reciever, do not take ownership of the port. NOTE: does the transmitter also need to be enabled?
     options.c_cflag &= ~CSIZE;
 	options.c_cflag &= ~PARENB; //no parity
 	options.c_cflag &= ~CSTOPB; //1 stopbit
 	options.c_cflag &= ~CSIZE;
-    options.c_cflag &= ~CNEW_RTSCTS; //no hardware flow control
+    options.c_cflag &= ~CRTSCTS; //no hardware flow control
 	options.c_cflag |= CS8; //8-bit chars
 	tcsetattr(port_fd, TCSANOW, &options);
 	((gr_block*)this)->start();
@@ -184,7 +194,9 @@ bool openmind_source::start(){
     	    if(write(port_fd, &c, 1) < 0){
 				return false; //Write error
 			}else{
-				if(!select(1, &port_fd, NULL, NULL, {0, 1000}) < 0){ //Wait 1 millisecond for a reply
+				FD_ZERO(&port_fds);
+				FD_SET(port_fd, &port_fds);
+				if(!select(1, &port_fds, NULL, NULL, &universal_timeout) < 0){ //Wait 1 millisecond for a reply
 					//Port ready for reading
 					int count = read(port_fd, bufp, 5-nread);
 					if(count<0){
@@ -201,7 +213,7 @@ bool openmind_source::start(){
     	}
 	}
 	buf[5] = 0;
-	if(strncmp(buf, "BBIO1")){
+	if(strncmp(buf, "BBIO1", sizeof(buf))){
 		return false; //Error in the bp binary mode initialization response string
 	}
 	char c = 0x01;
@@ -209,24 +221,28 @@ bool openmind_source::start(){
 			return false; //write error
 	}
 	for(nread,bufp = 0,buf; nread<4;){
-			if(select(1, &port_fd, NULL, NULL, {0, 1000})){
+		FD_ZERO(&port_fds);
+		FD_SET(port_fd, &port_fds);
+		if(select(1, &port_fds, NULL, NULL, &universal_timeout)){
 			return false; //Timeout
 		}
-		int ret = read(&port_fd, bufp, 6-nread);
+		int ret = read(port_fd, bufp, 6-nread);
 		if(ret < 0){
 			return false; //read error
 		}
 		nread += ret;
 		bufp += ret;
 	} 
-	if(strncmp(buf, "SPI1")){
+	if(strncmp(buf, "SPI1", sizeof(buf))){
 		return false; //Normally, SPI mode would be entered now.
 	}
 	c = 0x80;
 	if(write(port_fd, &c, 1) < 0){
 		return false; //write error
 	}
-	if(select(1, &port_fd, NULL, NULL, {0, 1000})){
+	FD_ZERO(&port_fds);
+	FD_SET(port_fd, &port_fds);
+	if(select(1, &port_fds, NULL, NULL, &universal_timeout)){
 		return false; //Timeout
 	}
 	if(read(port_fd, &c, 1) != 1){
@@ -239,7 +255,9 @@ bool openmind_source::start(){
 	if(write(port_fd, &c, 1) < 0){
 		return false; //write error
 	}
-	if(select(1, &port_fd, NULL, NULL, {0, 1000})){
+	FD_ZERO(&port_fds);
+	FD_SET(port_fd, &port_fds);
+	if(select(1, &port_fds, NULL, NULL, &universal_timeout)){
 		return false; //Timeout
 	}
 	if(read(port_fd, &c, 1) != 1){

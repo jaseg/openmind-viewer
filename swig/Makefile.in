@@ -102,7 +102,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-# Makefile.swig.gen for gr_my.i
+# Makefile.swig.gen for openmind.i
 
 
 VPATH = @srcdir@
@@ -125,11 +125,11 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
-DIST_COMMON = $(am__gr_my_python_PYTHON_DIST) \
-	$(am__gr_my_swiginclude_HEADERS_DIST) $(srcdir)/Makefile.am \
+DIST_COMMON = $(am__openmind_python_PYTHON_DIST) \
+	$(am__openmind_swiginclude_HEADERS_DIST) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/Makefile.swig.gen \
 	$(top_srcdir)/Makefile.common $(top_srcdir)/Makefile.swig
-@PYTHON_TRUE@am__append_1 = $(DEPDIR)/gr_my-generate-*
+@PYTHON_TRUE@am__append_1 = $(DEPDIR)/openmind-generate-*
 @PYTHON_TRUE@am__append_2 = $(DEPDIR)/*.S*
 subdir = swig
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -180,20 +180,22 @@ am__nobase_list = $(am__nobase_strip_setup); \
 am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
-am__installdirs = "$(DESTDIR)$(gr_my_pylibdir)" \
-	"$(DESTDIR)$(gr_my_pythondir)" \
-	"$(DESTDIR)$(gr_my_swigincludedir)"
-LTLIBRARIES = $(gr_my_pylib_LTLIBRARIES)
+am__installdirs = "$(DESTDIR)$(openmind_pylibdir)" \
+	"$(DESTDIR)$(openmind_pythondir)" \
+	"$(DESTDIR)$(openmind_swigincludedir)"
+LTLIBRARIES = $(openmind_pylib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
-@PYTHON_TRUE@_gr_my_swig_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
-am___gr_my_swig_la_SOURCES_DIST = gr_my_swig.cc
-@PYTHON_TRUE@am__gr_my_swig_la_OBJECTS = _gr_my_swig_la-gr_my_swig.lo
-_gr_my_swig_la_OBJECTS = $(am__gr_my_swig_la_OBJECTS)
-_gr_my_swig_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
+@PYTHON_TRUE@_openmind_swig_la_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+@PYTHON_TRUE@	$(openmind_la_swig_libadd)
+am___openmind_swig_la_SOURCES_DIST = openmind_swig.cc
+@PYTHON_TRUE@am__openmind_swig_la_OBJECTS =  \
+@PYTHON_TRUE@	_openmind_swig_la-openmind_swig.lo
+_openmind_swig_la_OBJECTS = $(am__openmind_swig_la_OBJECTS)
+_openmind_swig_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) \
-	$(_gr_my_swig_la_CXXFLAGS) $(CXXFLAGS) \
-	$(_gr_my_swig_la_LDFLAGS) $(LDFLAGS) -o $@
-@PYTHON_TRUE@am__gr_my_swig_la_rpath = -rpath $(gr_my_pylibdir)
+	$(_openmind_swig_la_CXXFLAGS) $(CXXFLAGS) \
+	$(_openmind_swig_la_LDFLAGS) $(LDFLAGS) -o $@
+@PYTHON_TRUE@am__openmind_swig_la_rpath = -rpath $(openmind_pylibdir)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -207,12 +209,12 @@ CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(_gr_my_swig_la_SOURCES)
-DIST_SOURCES = $(am___gr_my_swig_la_SOURCES_DIST)
-am__gr_my_python_PYTHON_DIST = gr_my_swig.py
+SOURCES = $(_openmind_swig_la_SOURCES)
+DIST_SOURCES = $(am___openmind_swig_la_SOURCES_DIST)
+am__openmind_python_PYTHON_DIST = openmind_swig.py
 py_compile = $(top_srcdir)/py-compile
-am__gr_my_swiginclude_HEADERS_DIST = gr_my.i
-HEADERS = $(gr_my_swiginclude_HEADERS)
+am__openmind_swiginclude_HEADERS_DIST = openmind.i
+HEADERS = $(openmind_swiginclude_HEADERS)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -435,15 +437,15 @@ MOSTLYCLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc *.pyo *~ *.tmp \
 ###################################
 # SWIG Python interface and library
 @PYTHON_TRUE@TOP_SWIG_IFILES = \
-@PYTHON_TRUE@	myModule.i
+@PYTHON_TRUE@	openmind.i
 
 
 # Install so that they end up available as:
 #   import howto
 # This ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/$(modname)
-@PYTHON_TRUE@myModule_la_swig_libadd = \
-@PYTHON_TRUE@	$(top_builddir)/lib/libgnuradio-myModule.la
+@PYTHON_TRUE@openmind_la_swig_libadd = \
+@PYTHON_TRUE@	$(top_builddir)/lib/libgnuradio-openmind.la
 
 @PYTHON_TRUE@SWIG_PYTHON_FLAGS = \
 @PYTHON_TRUE@	-fvirtual	\
@@ -470,36 +472,36 @@ MOSTLYCLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc *.pyo *~ *.tmp \
 
 @PYTHON_TRUE@STD_SWIG_CXX_FLAGS = @swig_CXXFLAGS@
 @PYTHON_TRUE@SUFFIXES = .i
-@PYTHON_TRUE@swig_built_sources = gr_my_swig.py gr_my_swig.cc
-@PYTHON_TRUE@gr_my_pythondir = $(pythondir)/gr_my
-@PYTHON_TRUE@gr_my_pylibdir = $(pyexecdir)/gr_my
-@PYTHON_TRUE@gr_my_swigincludedir = $(swigincludedir)
-@PYTHON_TRUE@gr_my_swiginclude_HEADERS = \
-@PYTHON_TRUE@	gr_my.i			\
-@PYTHON_TRUE@	$(gr_my_swiginclude_headers)
+@PYTHON_TRUE@swig_built_sources = openmind_swig.py @NAME@_swig.cc
+@PYTHON_TRUE@openmind_pythondir = $(pythondir)/@NAME@
+@PYTHON_TRUE@openmind_pylibdir = $(pyexecdir)/@NAME@
+@PYTHON_TRUE@openmind_swigincludedir = $(swigincludedir)
+@PYTHON_TRUE@openmind_swiginclude_HEADERS = \
+@PYTHON_TRUE@	openmind.i			\
+@PYTHON_TRUE@	$(openmind_swiginclude_headers)
 
-@PYTHON_TRUE@gr_my_pylib_LTLIBRARIES = \
-@PYTHON_TRUE@	_gr_my_swig.la
+@PYTHON_TRUE@openmind_pylib_LTLIBRARIES = \
+@PYTHON_TRUE@	_openmind_swig.la
 
-@PYTHON_TRUE@_gr_my_swig_la_SOURCES = \
-@PYTHON_TRUE@	gr_my_swig.cc			\
-@PYTHON_TRUE@	$(gr_my_la_swig_sources)
+@PYTHON_TRUE@_openmind_swig_la_SOURCES = \
+@PYTHON_TRUE@	openmind_swig.cc			\
+@PYTHON_TRUE@	$(openmind_la_swig_sources)
 
-@PYTHON_TRUE@_gr_my_swig_la_LIBADD = \
+@PYTHON_TRUE@_openmind_swig_la_LIBADD = \
 @PYTHON_TRUE@	$(STD_SWIG_LA_LIB_ADD)		\
-@PYTHON_TRUE@	$(gr_my_la_swig_libadd)
+@PYTHON_TRUE@	$(openmind_la_swig_libadd)
 
-@PYTHON_TRUE@_gr_my_swig_la_LDFLAGS = \
+@PYTHON_TRUE@_openmind_swig_la_LDFLAGS = \
 @PYTHON_TRUE@	$(STD_SWIG_LA_LD_FLAGS)		\
-@PYTHON_TRUE@	$(gr_my_la_swig_ldflags)
+@PYTHON_TRUE@	$(openmind_la_swig_ldflags)
 
-@PYTHON_TRUE@_gr_my_swig_la_CXXFLAGS = \
+@PYTHON_TRUE@_openmind_swig_la_CXXFLAGS = \
 @PYTHON_TRUE@	$(STD_SWIG_CXX_FLAGS)		\
-@PYTHON_TRUE@	$(gr_my_la_swig_cxxflags)
+@PYTHON_TRUE@	$(openmind_la_swig_cxxflags)
 
-@PYTHON_TRUE@gr_my_python_PYTHON = \
-@PYTHON_TRUE@	gr_my_swig.py			\
-@PYTHON_TRUE@	$(gr_my_python)
+@PYTHON_TRUE@openmind_python_PYTHON = \
+@PYTHON_TRUE@	openmind_swig.py			\
+@PYTHON_TRUE@	$(openmind_python)
 
 
 # add some of the variables generated inside the Makefile.swig.gen
@@ -509,8 +511,8 @@ MOSTLYCLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc *.pyo *~ *.tmp \
 @PYTHON_TRUE@no_dist_files = $(swig_built_sources)
 
 # additional SWIG files to be installed
-@PYTHON_TRUE@myModule_swiginclude_headers = \
-@PYTHON_TRUE@	myBlock.i
+@PYTHON_TRUE@openmind_swiginclude_headers = \
+@PYTHON_TRUE@	openmind.i
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -547,39 +549,39 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
-install-gr_my_pylibLTLIBRARIES: $(gr_my_pylib_LTLIBRARIES)
+install-openmind_pylibLTLIBRARIES: $(openmind_pylib_LTLIBRARIES)
 	@$(NORMAL_INSTALL)
-	test -z "$(gr_my_pylibdir)" || $(MKDIR_P) "$(DESTDIR)$(gr_my_pylibdir)"
-	@list='$(gr_my_pylib_LTLIBRARIES)'; test -n "$(gr_my_pylibdir)" || list=; \
+	test -z "$(openmind_pylibdir)" || $(MKDIR_P) "$(DESTDIR)$(openmind_pylibdir)"
+	@list='$(openmind_pylib_LTLIBRARIES)'; test -n "$(openmind_pylibdir)" || list=; \
 	list2=; for p in $$list; do \
 	  if test -f $$p; then \
 	    list2="$$list2 $$p"; \
 	  else :; fi; \
 	done; \
 	test -z "$$list2" || { \
-	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 '$(DESTDIR)$(gr_my_pylibdir)'"; \
-	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 "$(DESTDIR)$(gr_my_pylibdir)"; \
+	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 '$(DESTDIR)$(openmind_pylibdir)'"; \
+	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 "$(DESTDIR)$(openmind_pylibdir)"; \
 	}
 
-uninstall-gr_my_pylibLTLIBRARIES:
+uninstall-openmind_pylibLTLIBRARIES:
 	@$(NORMAL_UNINSTALL)
-	@list='$(gr_my_pylib_LTLIBRARIES)'; test -n "$(gr_my_pylibdir)" || list=; \
+	@list='$(openmind_pylib_LTLIBRARIES)'; test -n "$(openmind_pylibdir)" || list=; \
 	for p in $$list; do \
 	  $(am__strip_dir) \
-	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f '$(DESTDIR)$(gr_my_pylibdir)/$$f'"; \
-	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f "$(DESTDIR)$(gr_my_pylibdir)/$$f"; \
+	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f '$(DESTDIR)$(openmind_pylibdir)/$$f'"; \
+	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f "$(DESTDIR)$(openmind_pylibdir)/$$f"; \
 	done
 
-clean-gr_my_pylibLTLIBRARIES:
-	-test -z "$(gr_my_pylib_LTLIBRARIES)" || rm -f $(gr_my_pylib_LTLIBRARIES)
-	@list='$(gr_my_pylib_LTLIBRARIES)'; for p in $$list; do \
+clean-openmind_pylibLTLIBRARIES:
+	-test -z "$(openmind_pylib_LTLIBRARIES)" || rm -f $(openmind_pylib_LTLIBRARIES)
+	@list='$(openmind_pylib_LTLIBRARIES)'; for p in $$list; do \
 	  dir="`echo $$p | sed -e 's|/[^/]*$$||'`"; \
 	  test "$$dir" != "$$p" || dir=.; \
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
-_gr_my_swig.la: $(_gr_my_swig_la_OBJECTS) $(_gr_my_swig_la_DEPENDENCIES) 
-	$(_gr_my_swig_la_LINK) $(am__gr_my_swig_la_rpath) $(_gr_my_swig_la_OBJECTS) $(_gr_my_swig_la_LIBADD) $(LIBS)
+_openmind_swig.la: $(_openmind_swig_la_OBJECTS) $(_openmind_swig_la_DEPENDENCIES) 
+	$(_openmind_swig_la_LINK) $(am__openmind_swig_la_rpath) $(_openmind_swig_la_OBJECTS) $(_openmind_swig_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -587,7 +589,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_gr_my_swig_la-gr_my_swig.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_openmind_swig_la-openmind_swig.Plo@am__quote@
 
 .cc.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -610,22 +612,22 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
 
-_gr_my_swig_la-gr_my_swig.lo: gr_my_swig.cc
-@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_gr_my_swig_la_CXXFLAGS) $(CXXFLAGS) -MT _gr_my_swig_la-gr_my_swig.lo -MD -MP -MF $(DEPDIR)/_gr_my_swig_la-gr_my_swig.Tpo -c -o _gr_my_swig_la-gr_my_swig.lo `test -f 'gr_my_swig.cc' || echo '$(srcdir)/'`gr_my_swig.cc
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/_gr_my_swig_la-gr_my_swig.Tpo $(DEPDIR)/_gr_my_swig_la-gr_my_swig.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='gr_my_swig.cc' object='_gr_my_swig_la-gr_my_swig.lo' libtool=yes @AMDEPBACKSLASH@
+_openmind_swig_la-openmind_swig.lo: openmind_swig.cc
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_openmind_swig_la_CXXFLAGS) $(CXXFLAGS) -MT _openmind_swig_la-openmind_swig.lo -MD -MP -MF $(DEPDIR)/_openmind_swig_la-openmind_swig.Tpo -c -o _openmind_swig_la-openmind_swig.lo `test -f 'openmind_swig.cc' || echo '$(srcdir)/'`openmind_swig.cc
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/_openmind_swig_la-openmind_swig.Tpo $(DEPDIR)/_openmind_swig_la-openmind_swig.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='openmind_swig.cc' object='_openmind_swig_la-openmind_swig.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_gr_my_swig_la_CXXFLAGS) $(CXXFLAGS) -c -o _gr_my_swig_la-gr_my_swig.lo `test -f 'gr_my_swig.cc' || echo '$(srcdir)/'`gr_my_swig.cc
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_openmind_swig_la_CXXFLAGS) $(CXXFLAGS) -c -o _openmind_swig_la-openmind_swig.lo `test -f 'openmind_swig.cc' || echo '$(srcdir)/'`openmind_swig.cc
 
 mostlyclean-libtool:
 	-rm -f *.lo
 
 clean-libtool:
 	-rm -rf .libs _libs
-install-gr_my_pythonPYTHON: $(gr_my_python_PYTHON)
+install-openmind_pythonPYTHON: $(openmind_python_PYTHON)
 	@$(NORMAL_INSTALL)
-	test -z "$(gr_my_pythondir)" || $(MKDIR_P) "$(DESTDIR)$(gr_my_pythondir)"
-	@list='$(gr_my_python_PYTHON)'; dlist=; list2=; test -n "$(gr_my_pythondir)" || list=; \
+	test -z "$(openmind_pythondir)" || $(MKDIR_P) "$(DESTDIR)$(openmind_pythondir)"
+	@list='$(openmind_python_PYTHON)'; dlist=; list2=; test -n "$(openmind_pythondir)" || list=; \
 	for p in $$list; do \
 	  if test -f "$$p"; then b=; else b="$(srcdir)/"; fi; \
 	  if test -f $$b$$p; then \
@@ -636,50 +638,50 @@ install-gr_my_pythonPYTHON: $(gr_my_python_PYTHON)
 	done; \
 	for file in $$list2; do echo $$file; done | $(am__base_list) | \
 	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(gr_my_pythondir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(gr_my_pythondir)" || exit $$?; \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(openmind_pythondir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(openmind_pythondir)" || exit $$?; \
 	done || exit $$?; \
 	if test -n "$$dlist"; then \
 	  if test -z "$(DESTDIR)"; then \
-	    PYTHON=$(PYTHON) $(py_compile) --basedir "$(gr_my_pythondir)" $$dlist; \
+	    PYTHON=$(PYTHON) $(py_compile) --basedir "$(openmind_pythondir)" $$dlist; \
 	  else \
-	    PYTHON=$(PYTHON) $(py_compile) --destdir "$(DESTDIR)" --basedir "$(gr_my_pythondir)" $$dlist; \
+	    PYTHON=$(PYTHON) $(py_compile) --destdir "$(DESTDIR)" --basedir "$(openmind_pythondir)" $$dlist; \
 	  fi; \
 	else :; fi
 
-uninstall-gr_my_pythonPYTHON:
+uninstall-openmind_pythonPYTHON:
 	@$(NORMAL_UNINSTALL)
-	@list='$(gr_my_python_PYTHON)'; test -n "$(gr_my_pythondir)" || list=; \
+	@list='$(openmind_python_PYTHON)'; test -n "$(openmind_pythondir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	test -n "$$files" || exit 0; \
 	filesc=`echo "$$files" | sed 's|$$|c|'`; \
 	fileso=`echo "$$files" | sed 's|$$|o|'`; \
-	echo " ( cd '$(DESTDIR)$(gr_my_pythondir)' && rm -f" $$files ")"; \
-	cd "$(DESTDIR)$(gr_my_pythondir)" && rm -f $$files || exit $$?; \
-	echo " ( cd '$(DESTDIR)$(gr_my_pythondir)' && rm -f" $$filesc ")"; \
-	cd "$(DESTDIR)$(gr_my_pythondir)" && rm -f $$filesc || exit $$?; \
-	echo " ( cd '$(DESTDIR)$(gr_my_pythondir)' && rm -f" $$fileso ")"; \
-	cd "$(DESTDIR)$(gr_my_pythondir)" && rm -f $$fileso
-install-gr_my_swigincludeHEADERS: $(gr_my_swiginclude_HEADERS)
+	echo " ( cd '$(DESTDIR)$(openmind_pythondir)' && rm -f" $$files ")"; \
+	cd "$(DESTDIR)$(openmind_pythondir)" && rm -f $$files || exit $$?; \
+	echo " ( cd '$(DESTDIR)$(openmind_pythondir)' && rm -f" $$filesc ")"; \
+	cd "$(DESTDIR)$(openmind_pythondir)" && rm -f $$filesc || exit $$?; \
+	echo " ( cd '$(DESTDIR)$(openmind_pythondir)' && rm -f" $$fileso ")"; \
+	cd "$(DESTDIR)$(openmind_pythondir)" && rm -f $$fileso
+install-openmind_swigincludeHEADERS: $(openmind_swiginclude_HEADERS)
 	@$(NORMAL_INSTALL)
-	test -z "$(gr_my_swigincludedir)" || $(MKDIR_P) "$(DESTDIR)$(gr_my_swigincludedir)"
-	@list='$(gr_my_swiginclude_HEADERS)'; test -n "$(gr_my_swigincludedir)" || list=; \
+	test -z "$(openmind_swigincludedir)" || $(MKDIR_P) "$(DESTDIR)$(openmind_swigincludedir)"
+	@list='$(openmind_swiginclude_HEADERS)'; test -n "$(openmind_swigincludedir)" || list=; \
 	for p in $$list; do \
 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
 	  echo "$$d$$p"; \
 	done | $(am__base_list) | \
 	while read files; do \
-	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(gr_my_swigincludedir)'"; \
-	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(gr_my_swigincludedir)" || exit $$?; \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(openmind_swigincludedir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(openmind_swigincludedir)" || exit $$?; \
 	done
 
-uninstall-gr_my_swigincludeHEADERS:
+uninstall-openmind_swigincludeHEADERS:
 	@$(NORMAL_UNINSTALL)
-	@list='$(gr_my_swiginclude_HEADERS)'; test -n "$(gr_my_swigincludedir)" || list=; \
+	@list='$(openmind_swiginclude_HEADERS)'; test -n "$(openmind_swigincludedir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	test -n "$$files" || exit 0; \
-	echo " ( cd '$(DESTDIR)$(gr_my_swigincludedir)' && rm -f" $$files ")"; \
-	cd "$(DESTDIR)$(gr_my_swigincludedir)" && rm -f $$files
+	echo " ( cd '$(DESTDIR)$(openmind_swigincludedir)' && rm -f" $$files ")"; \
+	cd "$(DESTDIR)$(openmind_swigincludedir)" && rm -f $$files
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -771,7 +773,7 @@ check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
 all-am: Makefile $(LTLIBRARIES) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(gr_my_pylibdir)" "$(DESTDIR)$(gr_my_pythondir)" "$(DESTDIR)$(gr_my_swigincludedir)"; do \
+	for dir in "$(DESTDIR)$(openmind_pylibdir)" "$(DESTDIR)$(openmind_pythondir)" "$(DESTDIR)$(openmind_swigincludedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -804,7 +806,7 @@ maintainer-clean-generic:
 	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-am
 
-clean-am: clean-generic clean-gr_my_pylibLTLIBRARIES clean-libtool \
+clean-am: clean-generic clean-libtool clean-openmind_pylibLTLIBRARIES \
 	mostlyclean-am
 
 distclean: distclean-am
@@ -825,8 +827,9 @@ info: info-am
 
 info-am:
 
-install-data-am: install-gr_my_pylibLTLIBRARIES \
-	install-gr_my_pythonPYTHON install-gr_my_swigincludeHEADERS
+install-data-am: install-openmind_pylibLTLIBRARIES \
+	install-openmind_pythonPYTHON \
+	install-openmind_swigincludeHEADERS
 
 install-dvi: install-dvi-am
 
@@ -872,29 +875,30 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-gr_my_pylibLTLIBRARIES \
-	uninstall-gr_my_pythonPYTHON \
-	uninstall-gr_my_swigincludeHEADERS
+uninstall-am: uninstall-openmind_pylibLTLIBRARIES \
+	uninstall-openmind_pythonPYTHON \
+	uninstall-openmind_swigincludeHEADERS
 
 .MAKE: all check install install-am install-strip
 
 .PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
-	clean-gr_my_pylibLTLIBRARIES clean-libtool ctags dist-hook \
+	clean-libtool clean-openmind_pylibLTLIBRARIES ctags dist-hook \
 	distclean distclean-compile distclean-generic \
 	distclean-libtool distclean-tags distdir dvi dvi-am html \
 	html-am info info-am install install-am install-data \
 	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-gr_my_pylibLTLIBRARIES \
-	install-gr_my_pythonPYTHON install-gr_my_swigincludeHEADERS \
-	install-html install-html-am install-info install-info-am \
-	install-man install-pdf install-pdf-am install-ps \
-	install-ps-am install-strip installcheck installcheck-am \
-	installdirs maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-compile mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
-	uninstall-am uninstall-gr_my_pylibLTLIBRARIES \
-	uninstall-gr_my_pythonPYTHON \
-	uninstall-gr_my_swigincludeHEADERS
+	install-exec-am install-html install-html-am install-info \
+	install-info-am install-man install-openmind_pylibLTLIBRARIES \
+	install-openmind_pythonPYTHON \
+	install-openmind_swigincludeHEADERS install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	tags uninstall uninstall-am \
+	uninstall-openmind_pylibLTLIBRARIES \
+	uninstall-openmind_pythonPYTHON \
+	uninstall-openmind_swigincludeHEADERS
 
 
 # Don't distribute the files defined in the variable 'no_dist_files'
@@ -929,48 +933,47 @@ dist-hook:
 @PYTHON_TRUE@		exit -1; \
 @PYTHON_TRUE@	fi;
 
-@PYTHON_TRUE@gr_my.h gr_my_swig.py gr_my_swig.cc: gr_my.i
-@PYTHON_TRUE@	trap 'rm -rf $(DEPDIR)/gr_my-generate-*' 1 2 13 15; \
-@PYTHON_TRUE@	if mkdir $(DEPDIR)/gr_my-generate-lock 2>/dev/null; then \
-@PYTHON_TRUE@		rm -f $(DEPDIR)/gr_my-generate-stamp; \
-@PYTHON_TRUE@		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/gr_my-generate-stamp WHAT=$<; \
-@PYTHON_TRUE@		rmdir $(DEPDIR)/gr_my-generate-lock; \
+@PYTHON_TRUE@openmind.h @NAME@_swig.py @NAME@_swig.cc: @NAME@.i
+@PYTHON_TRUE@	trap 'rm -rf $(DEPDIR)/openmind-generate-*' 1 2 13 15; \
+@PYTHON_TRUE@	if mkdir $(DEPDIR)/openmind-generate-lock 2>/dev/null; then \
+@PYTHON_TRUE@		rm -f $(DEPDIR)/openmind-generate-stamp; \
+@PYTHON_TRUE@		$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/openmind-generate-stamp WHAT=$<; \
+@PYTHON_TRUE@		rmdir $(DEPDIR)/openmind-generate-lock; \
 @PYTHON_TRUE@	else \
-@PYTHON_TRUE@		while test -d $(DEPDIR)/gr_my-generate-lock; do \
+@PYTHON_TRUE@		while test -d $(DEPDIR)/openmind-generate-lock; do \
 @PYTHON_TRUE@			sleep 1; \
 @PYTHON_TRUE@		done; \
-@PYTHON_TRUE@		test -f $(DEPDIR)/gr_my-generate-stamp; \
+@PYTHON_TRUE@		test -f $(DEPDIR)/openmind-generate-stamp; \
 @PYTHON_TRUE@		exit $$?; \
 @PYTHON_TRUE@	fi;
 
-@PYTHON_TRUE@$(DEPDIR)/gr_my-generate-stamp:
-@PYTHON_TRUE@	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(gr_my_swig_args) \
-@PYTHON_TRUE@		-MD -MF $(DEPDIR)/gr_my.Std \
-@PYTHON_TRUE@		-module gr_my_swig -o gr_my_swig.cc $(WHAT); then \
+@PYTHON_TRUE@$(DEPDIR)/openmind-generate-stamp:
+@PYTHON_TRUE@	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(openmind_swig_args) \
+@PYTHON_TRUE@		-MD -MF $(DEPDIR)/openmind.Std \
+@PYTHON_TRUE@		-module openmind_swig -o @NAME@_swig.cc $(WHAT); then \
 @PYTHON_TRUE@	    if test $(host_os) = mingw32; then \
-@PYTHON_TRUE@		$(RM) $(DEPDIR)/gr_my.Sd; \
-@PYTHON_TRUE@		$(SED) 's,\\\\,/,g' < $(DEPDIR)/gr_my.Std \
-@PYTHON_TRUE@			> $(DEPDIR)/gr_my.Sd; \
-@PYTHON_TRUE@		$(RM) $(DEPDIR)/gr_my.Std; \
-@PYTHON_TRUE@		$(MV) $(DEPDIR)/gr_my.Sd $(DEPDIR)/gr_my.Std; \
+@PYTHON_TRUE@		$(RM) $(DEPDIR)/openmind.Sd; \
+@PYTHON_TRUE@		$(SED) 's,\\\\,/,g' < $(DEPDIR)/openmind.Std \
+@PYTHON_TRUE@			> $(DEPDIR)/openmind.Sd; \
+@PYTHON_TRUE@		$(RM) $(DEPDIR)/openmind.Std; \
+@PYTHON_TRUE@		$(MV) $(DEPDIR)/openmind.Sd $(DEPDIR)/@NAME@.Std; \
 @PYTHON_TRUE@	    fi; \
 @PYTHON_TRUE@	else \
-@PYTHON_TRUE@	    $(RM) $(DEPDIR)/gr_my.S*; exit 1; \
+@PYTHON_TRUE@	    $(RM) $(DEPDIR)/openmind.S*; exit 1; \
 @PYTHON_TRUE@	fi;
-@PYTHON_TRUE@	$(RM) $(DEPDIR)/gr_my.d
-@PYTHON_TRUE@	cp $(DEPDIR)/gr_my.Std $(DEPDIR)/gr_my.d
-@PYTHON_TRUE@	echo "" >> $(DEPDIR)/gr_my.d
-@PYTHON_TRUE@	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/gr_my.Std | \
-@PYTHON_TRUE@		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/gr_my.d
-@PYTHON_TRUE@	$(RM) $(DEPDIR)/gr_my.Std
-@PYTHON_TRUE@	touch $(DEPDIR)/gr_my-generate-stamp
+@PYTHON_TRUE@	$(RM) $(DEPDIR)/openmind.d
+@PYTHON_TRUE@	cp $(DEPDIR)/openmind.Std $(DEPDIR)/@NAME@.d
+@PYTHON_TRUE@	echo "" >> $(DEPDIR)/openmind.d
+@PYTHON_TRUE@	$(SED) -e '1d;s, \\,,g;s, ,,g' < $(DEPDIR)/openmind.Std | \
+@PYTHON_TRUE@		awk '{ printf "%s:\n\n", $$0 }' >> $(DEPDIR)/openmind.d
+@PYTHON_TRUE@	$(RM) $(DEPDIR)/openmind.Std
+@PYTHON_TRUE@	touch $(DEPDIR)/openmind-generate-stamp
 
 # KLUDGE: Force runtime include of a SWIG dependency file.  This is
 # not guaranteed to be portable, but will probably work.  If it works,
 # we have accurate dependencies for our swig stuff, which is good.
 
-@PYTHON_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gr_my.d@am__quote@
-#	myBlock2.i
+@PYTHON_TRUE@@am__include@ @am__quote@./$(DEPDIR)/openmind.d@am__quote@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

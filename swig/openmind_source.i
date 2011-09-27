@@ -2,16 +2,15 @@
 
 GR_SWIG_BLOCK_MAGIC(openmind,openmind_source);
 
-openmind_source_sptr make_openmind_source (int param1);
+openmind_source_sptr make_openmind_source (string device);
 
-class myBlock : public gr_sync_block
+class openmind_source : public gr_sync_block
 {
 private:
-  int d_param1;
-  openmind_source (int param1);  
+  string d_device;
+  openmind_source (string device);  
 
 public:
-  int param1 () const { return d_param1; }
-  void set_param1 (int param1) { d_param1 = param1; }
+  string device () const { return d_device; }
 
 };

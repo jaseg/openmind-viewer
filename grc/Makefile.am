@@ -24,5 +24,5 @@ include $(top_srcdir)/Makefile.common
 grcblocksdir = $(grc_blocksdir)
 
 dist_grcblocks_DATA = \
-	myBlock.xml
+	openmind_source.xml
 

@@ -28,15 +28,15 @@ if PYTHON
 # SWIG Python interface and library
 
 TOP_SWIG_IFILES = \
-	myModule.i
+	openmind.i
 
 # Install so that they end up available as:
 #   import howto
 # This ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/$(modname)
 
-myModule_la_swig_libadd =		\
-	$(top_builddir)/lib/libgnuradio-myModule.la
+openmind_la_swig_libadd =		\
+	$(top_builddir)/lib/libgnuradio-openmind.la
 
 include $(top_srcdir)/Makefile.swig
 
@@ -47,8 +47,7 @@ BUILT_SOURCES = $(swig_built_sources)
 no_dist_files = $(swig_built_sources)
 
 # additional SWIG files to be installed
-myModule_swiginclude_headers = \
-	myBlock.i
-#	myBlock2.i
+openmind_swiginclude_headers = \
+	openmind.i
 
 endif
