@@ -1,0 +1,2 @@
+This project aims to connect the openmind hardware to GNU Radio for data analysis.
+openmind_buspirate_to_fifo is run to take data from a connected buspirate which is connected to the openmind's SPI debug output and translate it and output it to one fifo per channel. The fifos can later be used in conjunction with gr_file_source s to input data to GNU Radio.

@@ -132,7 +132,15 @@ int work (int* fifofds, int portfd){
 		// TODO automatic vref acquisition
 		char* endptr;
 		//FIXME The following line is pretty certainly crap inherited from previous versions of this code.
-		fifofds[i] = (short int)(strtol(token, &endptr, 16));// /(ADS_VREF/((2^15)-1.0F)));
+		short sample = (short int)(strtol(token, &endptr, 16));// /(ADS_VREF/((2^15)-1.0F)));
+		if(write(portfd, (char*)&sample, 1) < 0){
+				printf("Data write error. errno: %i\n", errno);
+				return 3; //write error
+		}
+		if(write(portfd, (((char*)&sample)+1), 1) < 0){
+				printf("Data write error. errno: %i\n", errno);
+				return 3; //write error
+		}
 		if(*endptr != 0){
 			//An error occured (most likely some glitch between this code and the openmind firmware).
 			return 1;
