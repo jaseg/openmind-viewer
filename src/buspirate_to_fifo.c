@@ -29,53 +29,91 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <stdlib.h>
+#include <signal.h>
 
 #define SAMPLE_BUFFER_LENGTH 64
 #define CHANNEL_NUMBER 4
 #define FILENAME_BUFFER_SIZE 256
 
+static char fifo_prefix[FILENAME_BUFFER_SIZE];
+
 int start(char* device, int* portfd_out);
 int work(int* fifofds, int portfd);
+void start_refresh_timeout(struct timeval *arg);
 void help(char* argv);
+void graceful_exit(int signal);
 
 int main(int argc, char** argv){
 	//Parse the arguments
-	if(argc != 3){
+	if (argc != 3){
 		help(argv[0]);
 		return 1;
 	}
 	int portfd = -1;
 	//Initialize the connection
+	printf("Initializing communication channel\n");
 	int ec;
-	if((ec = start(argv[1], &portfd)) != 0){
+	if ((ec = start(argv[1], &portfd)) != 0){
 		printf("Error starting communication with buspirate: Error code %i\n", ec);
 		return ec;
 	}
 	//Open the files
+	//printf("Channel number: %i\n", CHANNEL_NUMBER);
+	//printf("Creating fifos\n");
+	strncpy (fifo_prefix, argv[2], FILENAME_BUFFER_SIZE);
 	int fifofds[CHANNEL_NUMBER];
-	for(int i=0; i<CHANNEL_NUMBER; i++){
+	for (int i=0; i<CHANNEL_NUMBER; i++){
+		//printf("Creating fifo %i\n", i);
 		char fifoname[FILENAME_BUFFER_SIZE];
-		snprintf(fifoname, FILENAME_BUFFER_SIZE, "%s_ch%i", argv[2], i);
+		snprintf(fifoname, FILENAME_BUFFER_SIZE, "%s_ch%i", fifo_prefix, i);
 		int ec;
-		if((ec = mkfifo(fifoname, 0))){
+		if ((ec = mkfifo(fifoname, 0664))){
 			printf("Cannot create fifo %s\n", fifoname);
 			return ec;
-		}
-		if((fifofds[i] = open(fifoname, 0)) != -1){
+		}/*else{
+			printf("Created fifo %s.\n", fifoname);
+		}*/
+		if ((fifofds[i] = open(fifoname, O_RDWR | O_NONBLOCK)) == -1){ //Open the fifo in r/w mode to avoid an error being thrown
 			printf("Cannot open the just created fifo %s\n", fifoname);
 			return errno;
 		}
+		//printf("Opened fifo %i\n", i);
 	}
-	while(work(fifofds, portfd) == 0);
+	//printf("Installing signal handlers\n");
+	signal(SIGTERM, &graceful_exit);
+	signal(SIGINT, &graceful_exit);
+	printf("Starting worker\n");
+	int error_code;
+	int run = 0;
+	do{
+		//printf("Calling worker\n");
+		error_code = work(fifofds, portfd);
+		if(run > 0){ //The first line is usually nonsense
+			switch(error_code){
+			case -1:
+				printf("Receiving Gibberish\n");
+				break;
+			case -2:
+				printf("Strange error: Receiving data for more channels than specified. Plz fix this.\n");
+				break;
+			}
+		}
+		run++;
+	}while(error_code <= 0);
+	printf("Exited due to an error thrown by the worker function: Error code %i.\n", error_code);
+	graceful_exit(23);
+}
+
+void graceful_exit(int signal){
 	for(int i=0; i<CHANNEL_NUMBER; i++){
 		char fifoname[FILENAME_BUFFER_SIZE];
-		snprintf(fifoname, FILENAME_BUFFER_SIZE, "%s_ch%i", argv[2], i);
+		snprintf(fifoname, FILENAME_BUFFER_SIZE, "%s_ch%i", fifo_prefix, i);
 		if(unlink(fifoname) == -1){
 			printf("Cannot remove fifo %s: error code %i\n", fifoname, errno);
-			return errno;
+			//exit(errno);
 		}
 	}
-	return 0;
+	exit(0);
 }
 
 void help(char* argv0){
@@ -88,8 +126,10 @@ int work (int* fifofds, int portfd){
 	int error_code;
 	char c;
 	int state = 0;
+	printf("Receiving a new line: ");
 	//Sorry for the crappy state machine. If this should not be clear enough, write me a mail and I'll fix it. ;)
 	for(bufp = buf; (error_code = read(portfd, &c, 1)) == 1 && bufp < buf + SAMPLE_BUFFER_LENGTH-1;){ //Have to account for trailing \0 here
+		printf("%c", c);
 		if(state == 1){
 			if(c == ']'){
 				state = 0;
@@ -97,6 +137,7 @@ int work (int* fifofds, int portfd){
 				break;
 			}else if(c == '\\'){
 				 state = 2;
+				 continue;
 			}
 		}
 		switch(state){
@@ -114,8 +155,10 @@ int work (int* fifofds, int portfd){
 			break;
 		}
 	}
+	printf("\n");
 	*bufp = '\0';
 	if(error_code != 1){
+		printf("Error receiving data: %i\n", error_code);
 		return (1<<(sizeof(int)-2)) | error_code; //This is kind of arbitrary...
 	}
 	//Ok, we did not catch an error but saw a complete block. Let's extract the data, and for good measure we do
@@ -124,11 +167,12 @@ int work (int* fifofds, int portfd){
 	char* saveptr;
 	char* token;
 	int i=0;
-	while((token = strtok_r(buf, " ", &saveptr))){
+	printf("INPUT LINE: %s\n", buf);
+	/*while((token = strtok_r(buf, " ", &saveptr))){
 		if (i >= CHANNEL_NUMBER){
-			printf("Strange error: Receiving data for more channels than specified. Plz fix this.\n");
-			return 2;
+			return -2;
 		}
+		printf("Currently handling channel %i with token %s\n", i, token);
 		// TODO automatic vref acquisition
 		char* endptr;
 		//FIXME The following line is pretty certainly crap inherited from previous versions of this code.
@@ -142,16 +186,22 @@ int work (int* fifofds, int portfd){
 				return 3; //write error
 		}
 		if(*endptr != 0){
-			//An error occured (most likely some glitch between this code and the openmind firmware).
-			return 1;
+			//A number format and stuff error occured (most likely some glitch between this code and the openmind firmware).
+			return -1;
 		}
 		i++;
-	}
+	}*/
 	return 0;
 }
 
+void start_refresh_timeout(struct timeval *arg){
+	//Wait 1 millisecond for a reply
+	arg->tv_sec = 0;
+	arg->tv_usec = 10000;
+}
+
 int start(char* device, int* portfd_out){
-	struct timeval universal_timeout = {0, 1000};
+	struct timeval universal_timeout;
 	int portfd = open(device, O_RDWR | O_NOCTTY | O_NDELAY);
 	fd_set portfds;
 	if(portfd == -1){
@@ -176,103 +226,125 @@ int start(char* device, int* portfd_out){
 	char buf[6];
 	char* bufp = buf;
 	int nread = 0;
+	int error_code;
 	//Sorry for the endless loop, but I think it is more clear like this.
 	while(1){
-		//In fact I do not know if every char of the init string counts as one "try". Anyway, I do not think that is too
-		//important.
-	    if(tries++ == 20){
+	    if (tries++ == 20){
 			printf("Too many initialization tries.\n");
 			return 2;
-	    }else{
-			char c=0;
-    	    if(write(portfd, &c, 1) < 0){
-				printf("Write error. errno: %i\n", errno);
-				return 3; //Write error
+	    }
+		char c=0;
+		if (write(portfd, &c, 1) < 0){
+			printf("Write error. errno: %i\n", errno);
+			return 3; //Write error
+		}
+		FD_ZERO(&portfds);
+		FD_SET(portfd, &portfds);
+		start_refresh_timeout(&universal_timeout);
+		//printf("Timeout struct state: %i %i\n", universal_timeout.tv_sec, universal_timeout.tv_usec);
+		error_code = select(portfd+1, &portfds, NULL, NULL, &universal_timeout);
+		if (error_code > 0){ 
+			//Port ready for reading
+			int count = read(portfd, bufp, 5-nread);
+			if (count<0){
+				printf("Read error. errno: %i\n", errno);
+				return 4; //Some read error.
 			}else{
-				FD_ZERO(&portfds);
-				FD_SET(portfd, &portfds);
-				if(!select(1, &portfds, NULL, NULL, &universal_timeout) < 0){ //Wait 1 millisecond for a reply
-					//Port ready for reading
-					int count = read(portfd, bufp, 5-nread);
-					if(count<0){
-						printf("Read error. errno: %i\n", errno);
-						return 4; //Some read error.
-					}else{
-						bufp += count;
-						nread += count;
-						if(nread == 5){
-							break; //Read complete.
-						}
-					}
+				bufp += count;
+				nread += count;
+				if(nread == 5){
+					break; //Read complete.
 				}
-    	    }
-    	}
+			}
+    	}else if (error_code == 0){
+			printf("Select read timeout.\n");
+			return 2;
+		}else{
+			printf("Select read error, errno: %i\n", errno);
+			return 4;
+		}
 	}
 	buf[5] = 0;
-	if(strncmp(buf, "BBIO1", sizeof(buf))){
+	if (strncmp(buf, "BBIO1", sizeof(buf))){
 		printf("Wrong response from buspirate.\n");
 		return 5; //Error in the bp binary mode initialization response string
 	}
 	char c = 0x01;
-	if(write(portfd, &c, 1) < 0){
+	if (write(portfd, &c, 1) < 0){
 			printf("Write error. errno: %i\n", errno);
 			return 3; //write error
 	}
 	nread = 0;
-	for(bufp = buf; nread<4;){
+	for (bufp = buf; nread<4;){
 		FD_ZERO(&portfds);
 		FD_SET(portfd, &portfds);
-		if(select(1, &portfds, NULL, NULL, &universal_timeout)){
+		start_refresh_timeout(&universal_timeout);
+		error_code = select(portfd+1, &portfds, NULL, NULL, &universal_timeout);
+		if (error_code == 0){
 			printf("Timeout while initializing the buspirate.\n");
 			return 2; //Timeout
+		}else if (error_code < 0){
+			printf("Select read error, errno: %i\n", errno);
+			return 4;
 		}
 		int ret = read(portfd, bufp, 6-nread);
-		if(ret < 0){
+		if (ret < 0){
 			printf("Read error. errno: %i\n", errno);
 			return 4; //read error
 		}
 		nread += ret;
 		bufp += ret;
 	} 
-	if(strncmp(buf, "SPI1", sizeof(buf))){
-		printf("Wrong response from buspirate.\n");
+	if (strncmp(buf, "SPI1", 4)){
+		printf("Wrong response from buspirate: %s\n", buf);
 		return 6; //Normally, SPI mode would be entered now.
 	}
 	c = 0x80;
-	if(write(portfd, &c, 1) < 0){
+	if (write(portfd, &c, 1) < 0){
 		printf("Write error. errno: %i\n", errno);
 		return 3; //write error
 	}
 	FD_ZERO(&portfds);
 	FD_SET(portfd, &portfds);
-	if(select(1, &portfds, NULL, NULL, &universal_timeout)){
+	start_refresh_timeout(&universal_timeout);
+	error_code = select(portfd+1, &portfds, NULL, NULL, &universal_timeout);
+	if (error_code == 0){
 		printf("Timeout while initializing the buspirate.\n");
 		return 2; //Timeout
+	}else if (error_code < 0){
+		printf("Select read error, errno: %i\n", errno);
+		return 4;
 	}
-	if(read(portfd, &c, 1) != 1){
+	if (read(portfd, &c, 1) != 1){
 		printf("Read error. errno: %i\n", errno);
 		return 4; //read error
 	}
-	if(c != 0x01){
+	if (c != 0x01){
 		printf("Wrong response from buspirate.\n");
 		return 7; //Wrong response
 	}
 	c = 0x0E;
-	if(write(portfd, &c, 1) < 0){
+	if (write(portfd, &c, 1) < 0){
 		printf("Write error. errno: %i\n", errno);
 		return 3; //write error
 	}
 	FD_ZERO(&portfds);
 	FD_SET(portfd, &portfds);
-	if(select(1, &portfds, NULL, NULL, &universal_timeout)){
+	start_refresh_timeout(&universal_timeout);
+	error_code = select(portfd+1, &portfds, NULL, NULL, &universal_timeout);
+	if (error_code == 0){
 		printf("Timeout while initializing the buspirate.\n");
 		return 2; //Timeout
+	}else if (error_code < 0){
+		printf("Select read error, errno: %i\n", errno);
+		return 4;
 	}
-	if(read(portfd, &c, 1) != 1){
+
+	if (read(portfd, &c, 1) != 1){
 		printf("Read error. errno: %i\n", errno);
 		return 4; //read error
 	}
-	if(c != 0x01){
+	if (c != 0x01){
 		printf("Wrong response from buspirate.\n");
 		return 8; //Wrong response
 	}
