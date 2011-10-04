@@ -168,7 +168,7 @@ int work (int* fifofds, int portfd){
 	char* token;
 	int i=0;
 	printf("INPUT LINE: %s\n", buf);
-	/*while((token = strtok_r(buf, " ", &saveptr))){
+	while((token = strtok_r(buf, " ", &saveptr))){
 		if (i >= CHANNEL_NUMBER){
 			return -2;
 		}
@@ -177,11 +177,11 @@ int work (int* fifofds, int portfd){
 		char* endptr;
 		//FIXME The following line is pretty certainly crap inherited from previous versions of this code.
 		short sample = (short int)(strtol(token, &endptr, 16));// /(ADS_VREF/((2^15)-1.0F)));
-		if(write(portfd, (char*)&sample, 1) < 0){
+		if(write(fifofds[i], (char*)&sample, 1) < 0){
 				printf("Data write error. errno: %i\n", errno);
 				return 3; //write error
 		}
-		if(write(portfd, (((char*)&sample)+1), 1) < 0){
+		if(write(fifofds[i], (((char*)&sample)+1), 1) < 0){
 				printf("Data write error. errno: %i\n", errno);
 				return 3; //write error
 		}
@@ -190,7 +190,7 @@ int work (int* fifofds, int portfd){
 			return -1;
 		}
 		i++;
-	}*/
+	}
 	return 0;
 }
 
