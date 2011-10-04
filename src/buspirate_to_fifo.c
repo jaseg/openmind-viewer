@@ -126,10 +126,10 @@ int work (int* fifofds, int portfd){
 	int error_code;
 	char c;
 	int state = 0;
-	printf("Receiving a new line: ");
-	//Sorry for the crappy state machine. If this should not be clear enough, write me a mail and I'll fix it. ;)
+	//printf("Receiving a new line: ");
+	//Sorry for the crappy state machine. If this should not be clear enough, write me a mail and I'll fix it. :P (its purpose is to parse the buspirate SPI sniffer output and it actually works)
 	for(bufp = buf; (error_code = read(portfd, &c, 1)) == 1 && bufp < buf + SAMPLE_BUFFER_LENGTH-1;){ //Have to account for trailing \0 here
-		printf("%c", c);
+		//printf("%c", c);
 		if(state == 1){
 			if(c == ']'){
 				state = 0;
@@ -155,7 +155,7 @@ int work (int* fifofds, int portfd){
 			break;
 		}
 	}
-	printf("\n");
+	//printf("\n");
 	*bufp = '\0';
 	if(error_code != 1){
 		printf("Error receiving data: %i\n", error_code);
@@ -166,13 +166,16 @@ int work (int* fifofds, int portfd){
 	//this to just another great API, for now I just want to get this working.
 	char* saveptr;
 	char* token;
+	char* opstring = buf;
 	int i=0;
-	printf("INPUT LINE: %s\n", buf);
-	while((token = strtok_r(buf, " ", &saveptr))){
+	//printf("INPUT LINE: %s\n", buf);
+	while((token = strtok_r(opstring, " ", &saveptr))){
+		opstring = NULL; //For strtok_r
 		if (i >= CHANNEL_NUMBER){
+			//printf("Superfluous token: %s\n", token);
 			return -2;
 		}
-		printf("Currently handling channel %i with token %s\n", i, token);
+		//printf("Currently handling channel %i with token %s and saveptr %i\n", i, token, (int)saveptr);
 		// TODO automatic vref acquisition
 		char* endptr;
 		//FIXME The following line is pretty certainly crap inherited from previous versions of this code.
