@@ -224,6 +224,13 @@ int start(char* device, int* portfd_out){
     options.c_cflag &= ~CRTSCTS; //no hardware flow control
 	options.c_cflag |= CS8; //8-bit chars
 	tcsetattr(portfd, TCSANOW, &options);
+	
+	//First send a reset to the buspirate
+	char reset_char='#';
+	if (write(portfd, &reset_char, 1) < 0){
+		printf("Write error. errno: %i\n", errno);
+		return 3; //Write error
+	}
 
 	int tries = 0;
 	char buf[6];
@@ -244,8 +251,8 @@ int start(char* device, int* portfd_out){
 		FD_ZERO(&portfds);
 		FD_SET(portfd, &portfds);
 		start_refresh_timeout(&universal_timeout);
-		//printf("Timeout struct state: %i %i\n", universal_timeout.tv_sec, universal_timeout.tv_usec);
 		error_code = select(portfd+1, &portfds, NULL, NULL, &universal_timeout);
+		//printf("Timeout struct state: %i %i\n", universal_timeout.tv_sec, universal_timeout.tv_usec);
 		if (error_code > 0){ 
 			//Port ready for reading
 			int count = read(portfd, bufp, 5-nread);

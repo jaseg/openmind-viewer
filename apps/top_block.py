@@ -2,22 +2,18 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Top Block
-# Generated: Tue Sep 27 16:52:55 2011
+# Generated: Tue Oct  4 22:13:23 2011
 ##################################################
 
 from gnuradio import eng_notation
 from gnuradio import gr
+from gnuradio import window
 from gnuradio.eng_option import eng_option
 from gnuradio.gr import firdes
-from gnuradio.wxgui import scopesink2
+from gnuradio.wxgui import waterfallsink2
 from grc_gnuradio import wxgui as grc_wxgui
 from optparse import OptionParser
-import openmind
 import wx
-import os
-
-#print 'Blocked waiting for GDB attach (pid = %d)' % (os.getpid(),)
-#raw_input ('Press Enter to continue: ')
 
 class top_block(grc_wxgui.top_block_gui):
 
@@ -32,32 +28,31 @@ class top_block(grc_wxgui.top_block_gui):
 		##################################################
 		# Blocks
 		##################################################
-		self.gr_interleaved_short_to_complex_0 = gr.interleaved_short_to_complex()
-		self.openmind_buspirate_source_0 = openmind.make_openmind_buspirate_source("/dev/ttyUSB0")
-		self.wxgui_scopesink2_0 = scopesink2.scope_sink_c(
+		self.gr_file_source_0 = gr.file_source(gr.sizeof_short*1, "/tmp/openmind_ch0", True)
+		self.gr_short_to_float_0 = gr.short_to_float()
+		self.wxgui_waterfallsink2_0 = waterfallsink2.waterfall_sink_f(
 			self.GetWin(),
-			title="Scope Plot",
-			sample_rate=samp_rate,
-			v_scale=0,
-			v_offset=0,
-			t_scale=0,
-			ac_couple=False,
-			xy_mode=False,
-			num_inputs=1,
+			baseband_freq=0,
+			dynamic_range=100,
+			ref_level=50,
+			ref_scale=2.0,
+			sample_rate=125,
+			fft_size=512,
+			fft_rate=15,
+			average=False,
+			avg_alpha=None,
+			title="Waterfall Plot",
 		)
-		self.Add(self.wxgui_scopesink2_0.win)
+		self.Add(self.wxgui_waterfallsink2_0.win)
 
 		##################################################
 		# Connections
 		##################################################
-		self.connect((self.gr_interleaved_short_to_complex_0, 0), (self.wxgui_scopesink2_0, 0))
-		self.openmind_buspirate_source_0.test("foo")
-		self.connect((self.openmind_buspirate_source_0, 0), (self.gr_interleaved_short_to_complex_0, 0))
-		self.openmind_buspirate_source_0.test("baz")
+		self.connect((self.gr_file_source_0, 0), (self.gr_short_to_float_0, 0))
+		self.connect((self.gr_short_to_float_0, 0), (self.wxgui_waterfallsink2_0, 0))
 
 	def set_samp_rate(self, samp_rate):
 		self.samp_rate = samp_rate
-		self.wxgui_scopesink2_0.set_sample_rate(self.samp_rate)
 
 if __name__ == '__main__':
 	parser = OptionParser(option_class=eng_option, usage="%prog: [options]")

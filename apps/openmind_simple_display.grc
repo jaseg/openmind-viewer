@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Tue Sep 27 16:50:08 2011</timestamp>
+  <timestamp>Tue Oct  4 22:13:20 2011</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -80,29 +80,10 @@
     </param>
   </block>
   <block>
-    <key>gr_interleaved_short_to_complex</key>
+    <key>wxgui_waterfallsink2</key>
     <param>
       <key>id</key>
-      <value>gr_interleaved_short_to_complex_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(399, 83)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>wxgui_scopesink2</key>
-    <param>
-      <key>id</key>
-      <value>wxgui_scopesink2_0</value>
+      <value>wxgui_waterfallsink2_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -110,39 +91,51 @@
     </param>
     <param>
       <key>type</key>
-      <value>complex</value>
+      <value>float</value>
     </param>
     <param>
       <key>title</key>
-      <value>Scope Plot</value>
+      <value>Waterfall Plot</value>
     </param>
     <param>
       <key>samp_rate</key>
-      <value>samp_rate</value>
+      <value>125</value>
     </param>
     <param>
-      <key>v_scale</key>
+      <key>baseband_freq</key>
       <value>0</value>
     </param>
     <param>
-      <key>v_offset</key>
-      <value>0</value>
+      <key>dynamic_range</key>
+      <value>100</value>
     </param>
     <param>
-      <key>t_scale</key>
-      <value>0</value>
+      <key>ref_level</key>
+      <value>50</value>
     </param>
     <param>
-      <key>ac_couple</key>
+      <key>ref_scale</key>
+      <value>2.0</value>
+    </param>
+    <param>
+      <key>fft_size</key>
+      <value>512</value>
+    </param>
+    <param>
+      <key>fft_rate</key>
+      <value>15</value>
+    </param>
+    <param>
+      <key>average</key>
       <value>False</value>
     </param>
     <param>
-      <key>xy_mode</key>
-      <value>False</value>
+      <key>avg_alpha</key>
+      <value>0</value>
     </param>
     <param>
-      <key>num_inputs</key>
-      <value>1</value>
+      <key>win</key>
+      <value>None</value>
     </param>
     <param>
       <key>win_size</key>
@@ -158,7 +151,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(634, 72)</value>
+      <value>(623, 30)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -166,22 +159,53 @@
     </param>
   </block>
   <block>
-    <key>openmind_buspirate_source</key>
+    <key>gr_file_source</key>
     <param>
       <key>id</key>
-      <value>openmind_buspirate_source_0</value>
+      <value>gr_file_source_0</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>device</key>
-      <value>/dev/ttyUSB0</value>
+      <key>file</key>
+      <value>/tmp/openmind_ch0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>short</value>
+    </param>
+    <param>
+      <key>repeat</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(174, 79)</value>
+      <value>(203, 72)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_short_to_float</key>
+    <param>
+      <key>id</key>
+      <value>gr_short_to_float_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(424, 83)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -189,14 +213,14 @@
     </param>
   </block>
   <connection>
-    <source_block_id>gr_interleaved_short_to_complex_0</source_block_id>
-    <sink_block_id>wxgui_scopesink2_0</sink_block_id>
+    <source_block_id>gr_file_source_0</source_block_id>
+    <sink_block_id>gr_short_to_float_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>openmind_buspirate_source_0</source_block_id>
-    <sink_block_id>gr_interleaved_short_to_complex_0</sink_block_id>
+    <source_block_id>gr_short_to_float_0</source_block_id>
+    <sink_block_id>wxgui_waterfallsink2_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
