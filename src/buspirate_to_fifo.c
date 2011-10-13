@@ -60,24 +60,20 @@ int main(int argc, char** argv){
 	//Open the files
 	//printf("Channel number: %i\n", CHANNEL_NUMBER);
 	//printf("Creating fifos\n");
-	strncpy (fifo_prefix, argv[2], FILENAME_BUFFER_SIZE);
-	int fifofds[CHANNEL_NUMBER];
+	int socks[CHANNEL_NUMBER];
 	for (int i=0; i<CHANNEL_NUMBER; i++){
 		//printf("Creating fifo %i\n", i);
-		char fifoname[FILENAME_BUFFER_SIZE];
-		snprintf(fifoname, FILENAME_BUFFER_SIZE, "%s_ch%i", fifo_prefix, i);
-		int ec;
-		if ((ec = mkfifo(fifoname, 0664))){
-			printf("Cannot create fifo %s\n", fifoname);
-			return ec;
-		}/*else{
-			printf("Created fifo %s.\n", fifoname);
-		}*/
-		if ((fifofds[i] = open(fifoname, O_RDWR | O_NDELAY)) == -1){ //Open the fifo in r/w mode to avoid an error being thrown
-			printf("Cannot open the just created fifo %s\n", fifoname);
-			return errno;
-		}
-		//printf("Opened fifo %i\n", i);
+		int sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+		struct sockaddr_in sa; 
+		char buffer[1024];
+	    ssize_t recsize;
+		socklen_t fromlen;
+		memset(&sa, 0, sizeof sa);
+		sa.sin_family = AF_INET;
+		sa.sin_addr.s_addr = inet_addr("127.0.0.1");
+		sa.sin_port = htons(atoi(argv[2]));
+	    fromlen = sizeof(sa);
+		bind(sock,(struct sockaddr *)&sa, sizeof(sa));
 	}
 	//printf("Installing signal handlers\n");
 	signal(SIGTERM, &graceful_exit);
