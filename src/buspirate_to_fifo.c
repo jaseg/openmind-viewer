@@ -73,7 +73,7 @@ int main(int argc, char** argv){
 		}/*else{
 			printf("Created fifo %s.\n", fifoname);
 		}*/
-		if ((fifofds[i] = open(fifoname, O_RDWR | O_NONBLOCK)) == -1){ //Open the fifo in r/w mode to avoid an error being thrown
+		if ((fifofds[i] = open(fifoname, O_RDWR | O_NDELAY)) == -1){ //Open the fifo in r/w mode to avoid an error being thrown
 			printf("Cannot open the just created fifo %s\n", fifoname);
 			return errno;
 		}
@@ -199,8 +199,8 @@ int work (int* fifofds, int portfd){
 
 void start_refresh_timeout(struct timeval *arg){
 	//Wait 1 millisecond for a reply
-	arg->tv_sec = 0;
-	arg->tv_usec = 10000;
+	arg->tv_sec = 1;
+	arg->tv_usec = 0;
 }
 
 int start(char* device, int* portfd_out){
@@ -225,19 +225,20 @@ int start(char* device, int* portfd_out){
 	options.c_cflag |= CS8; //8-bit chars
 	tcsetattr(portfd, TCSANOW, &options);
 	
-	//First send a reset to the buspirate
+	/*First send a reset to the buspirate
 	char reset_char='#';
 	if (write(portfd, &reset_char, 1) < 0){
 		printf("Write error. errno: %i\n", errno);
 		return 3; //Write error
 	}
+	*/
 
 	int tries = 0;
 	char buf[6];
 	char* bufp = buf;
 	int nread = 0;
 	int error_code;
-	//Sorry for the endless loop, but I think it is more clear like this.
+	//Sorry for the endless loop, but I think it is more clear that way.
 	while(1){
 	    if (tries++ == 20){
 			printf("Too many initialization tries.\n");
@@ -248,10 +249,11 @@ int start(char* device, int* portfd_out){
 			printf("Write error. errno: %i\n", errno);
 			return 3; //Write error
 		}
+		usleep(2000);
 		FD_ZERO(&portfds);
 		FD_SET(portfd, &portfds);
 		start_refresh_timeout(&universal_timeout);
-		error_code = select(portfd+1, &portfds, NULL, NULL, &universal_timeout);
+		error_code = select(portfd+1, &portfds, (fd_set *)0, (fd_set *)0, &universal_timeout);
 		//printf("Timeout struct state: %i %i\n", universal_timeout.tv_sec, universal_timeout.tv_usec);
 		if (error_code > 0){ 
 			//Port ready for reading
@@ -267,8 +269,7 @@ int start(char* device, int* portfd_out){
 				}
 			}
     	}else if (error_code == 0){
-			printf("Select read timeout.\n");
-			return 2;
+			//printf("Select read timeout.\n");
 		}else{
 			printf("Select read error, errno: %i\n", errno);
 			return 4;
@@ -292,7 +293,7 @@ int start(char* device, int* portfd_out){
 		error_code = select(portfd+1, &portfds, NULL, NULL, &universal_timeout);
 		if (error_code == 0){
 			printf("Timeout while initializing the buspirate.\n");
-			return 2; //Timeout
+			//return 2; //Timeout
 		}else if (error_code < 0){
 			printf("Select read error, errno: %i\n", errno);
 			return 4;

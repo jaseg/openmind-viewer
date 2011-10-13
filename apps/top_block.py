@@ -2,15 +2,14 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Top Block
-# Generated: Tue Oct  4 22:13:23 2011
+# Generated: Thu Oct 13 20:33:37 2011
 ##################################################
 
 from gnuradio import eng_notation
 from gnuradio import gr
-from gnuradio import window
 from gnuradio.eng_option import eng_option
 from gnuradio.gr import firdes
-from gnuradio.wxgui import waterfallsink2
+from gnuradio.wxgui import scopesink2
 from grc_gnuradio import wxgui as grc_wxgui
 from optparse import OptionParser
 import wx
@@ -28,28 +27,39 @@ class top_block(grc_wxgui.top_block_gui):
 		##################################################
 		# Blocks
 		##################################################
-		self.gr_file_source_0 = gr.file_source(gr.sizeof_short*1, "/tmp/openmind_ch0", True)
-		self.gr_short_to_float_0 = gr.short_to_float()
-		self.wxgui_waterfallsink2_0 = waterfallsink2.waterfall_sink_f(
+		self.wxgui_scopesink2_0 = scopesink2.scope_sink_f(
 			self.GetWin(),
-			baseband_freq=0,
-			dynamic_range=100,
-			ref_level=50,
-			ref_scale=2.0,
+			title="Scope Plot",
 			sample_rate=125,
-			fft_size=512,
-			fft_rate=15,
-			average=False,
-			avg_alpha=None,
-			title="Waterfall Plot",
+			v_scale=0,
+			v_offset=0,
+			t_scale=100,
+			ac_couple=False,
+			xy_mode=False,
+			num_inputs=2,
+			trig_mode=gr.gr_TRIG_MODE_AUTO,
+			y_axis_label="Counts",
 		)
-		self.Add(self.wxgui_waterfallsink2_0.win)
+		self.Add(self.wxgui_scopesink2_0.win)
+		self.gr_throttle_0_0 = gr.throttle(gr.sizeof_short*1, 125)
+		self.gr_throttle_0 = gr.throttle(gr.sizeof_short*1, 125)
+		self.gr_sig_source_x_0 = gr.sig_source_s(125, gr.GR_COS_WAVE, 10, 32767, 0)
+		self.gr_short_to_float_0_0 = gr.short_to_float()
+		self.gr_short_to_float_0 = gr.short_to_float()
+		self.gr_file_source_0 = gr.file_source(gr.sizeof_short*1, "/tmp/openmind_ch0", True)
 
 		##################################################
 		# Connections
 		##################################################
-		self.connect((self.gr_file_source_0, 0), (self.gr_short_to_float_0, 0))
-		self.connect((self.gr_short_to_float_0, 0), (self.wxgui_waterfallsink2_0, 0))
+		self.connect((self.gr_short_to_float_0, 0), (self.wxgui_scopesink2_0, 0))
+		self.connect((self.gr_throttle_0, 0), (self.gr_short_to_float_0, 0))
+		self.connect((self.gr_sig_source_x_0, 0), (self.gr_throttle_0, 0))
+		self.connect((self.gr_short_to_float_0_0, 0), (self.wxgui_scopesink2_0, 1))
+		self.connect((self.gr_throttle_0_0, 0), (self.gr_short_to_float_0_0, 0))
+		self.connect((self.gr_file_source_0, 0), (self.gr_throttle_0_0, 0))
+
+	def get_samp_rate(self):
+		return self.samp_rate
 
 	def set_samp_rate(self, samp_rate):
 		self.samp_rate = samp_rate

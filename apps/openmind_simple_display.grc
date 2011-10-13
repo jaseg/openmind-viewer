@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Tue Oct  4 22:13:20 2011</timestamp>
+  <timestamp>Thu Oct 13 20:36:18 2011</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -80,10 +80,29 @@
     </param>
   </block>
   <block>
-    <key>wxgui_waterfallsink2</key>
+    <key>gr_short_to_float</key>
     <param>
       <key>id</key>
-      <value>wxgui_waterfallsink2_0</value>
+      <value>gr_short_to_float_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(561, 170)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>wxgui_scopesink2</key>
+    <param>
+      <key>id</key>
+      <value>wxgui_scopesink2_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -95,47 +114,35 @@
     </param>
     <param>
       <key>title</key>
-      <value>Waterfall Plot</value>
+      <value>Scope Plot</value>
     </param>
     <param>
       <key>samp_rate</key>
       <value>125</value>
     </param>
     <param>
-      <key>baseband_freq</key>
+      <key>v_scale</key>
       <value>0</value>
     </param>
     <param>
-      <key>dynamic_range</key>
+      <key>v_offset</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>t_scale</key>
       <value>100</value>
     </param>
     <param>
-      <key>ref_level</key>
-      <value>50</value>
-    </param>
-    <param>
-      <key>ref_scale</key>
-      <value>2.0</value>
-    </param>
-    <param>
-      <key>fft_size</key>
-      <value>512</value>
-    </param>
-    <param>
-      <key>fft_rate</key>
-      <value>15</value>
-    </param>
-    <param>
-      <key>average</key>
+      <key>ac_couple</key>
       <value>False</value>
     </param>
     <param>
-      <key>avg_alpha</key>
-      <value>0</value>
+      <key>xy_mode</key>
+      <value>False</value>
     </param>
     <param>
-      <key>win</key>
-      <value>None</value>
+      <key>num_inputs</key>
+      <value>2</value>
     </param>
     <param>
       <key>win_size</key>
@@ -150,8 +157,66 @@
       <value></value>
     </param>
     <param>
+      <key>trig_mode</key>
+      <value>gr.gr_TRIG_MODE_AUTO</value>
+    </param>
+    <param>
+      <key>y_axis_label</key>
+      <value>Counts</value>
+    </param>
+    <param>
       <key>_coordinate</key>
-      <value>(623, 30)</value>
+      <value>(776, 233)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_throttle</key>
+    <param>
+      <key>id</key>
+      <value>gr_throttle_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>short</value>
+    </param>
+    <param>
+      <key>samples_per_second</key>
+      <value>125</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(370, 166)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_short_to_float</key>
+    <param>
+      <key>id</key>
+      <value>gr_short_to_float_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(579, 341)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -186,7 +251,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(203, 72)</value>
+      <value>(155, 330)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -194,18 +259,73 @@
     </param>
   </block>
   <block>
-    <key>gr_short_to_float</key>
+    <key>gr_sig_source_x</key>
     <param>
       <key>id</key>
-      <value>gr_short_to_float_0</value>
+      <value>gr_sig_source_x_0</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
+      <key>type</key>
+      <value>short</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>125</value>
+    </param>
+    <param>
+      <key>waveform</key>
+      <value>gr.GR_COS_WAVE</value>
+    </param>
+    <param>
+      <key>freq</key>
+      <value>10</value>
+    </param>
+    <param>
+      <key>amp</key>
+      <value>32767</value>
+    </param>
+    <param>
+      <key>offset</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>_coordinate</key>
-      <value>(424, 83)</value>
+      <value>(177, 138)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_throttle</key>
+    <param>
+      <key>id</key>
+      <value>gr_throttle_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>short</value>
+    </param>
+    <param>
+      <key>samples_per_second</key>
+      <value>125</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(378, 337)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -213,14 +333,38 @@
     </param>
   </block>
   <connection>
-    <source_block_id>gr_file_source_0</source_block_id>
+    <source_block_id>gr_short_to_float_0</source_block_id>
+    <sink_block_id>wxgui_scopesink2_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>gr_throttle_0</source_block_id>
     <sink_block_id>gr_short_to_float_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_short_to_float_0</source_block_id>
-    <sink_block_id>wxgui_waterfallsink2_0</sink_block_id>
+    <source_block_id>gr_sig_source_x_0</source_block_id>
+    <sink_block_id>gr_throttle_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>gr_short_to_float_0_0</source_block_id>
+    <sink_block_id>wxgui_scopesink2_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>1</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>gr_throttle_0_0</source_block_id>
+    <sink_block_id>gr_short_to_float_0_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>gr_file_source_0</source_block_id>
+    <sink_block_id>gr_throttle_0_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
