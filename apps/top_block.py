@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Top Block
-# Generated: Thu Oct 13 20:33:37 2011
+# Generated: Thu Oct 13 21:55:05 2011
 ##################################################
 
 from gnuradio import eng_notation
@@ -33,30 +33,24 @@ class top_block(grc_wxgui.top_block_gui):
 			sample_rate=125,
 			v_scale=0,
 			v_offset=0,
-			t_scale=100,
+			t_scale=1000,
 			ac_couple=False,
 			xy_mode=False,
-			num_inputs=2,
+			num_inputs=1,
 			trig_mode=gr.gr_TRIG_MODE_AUTO,
 			y_axis_label="Counts",
 		)
 		self.Add(self.wxgui_scopesink2_0.win)
-		self.gr_throttle_0_0 = gr.throttle(gr.sizeof_short*1, 125)
-		self.gr_throttle_0 = gr.throttle(gr.sizeof_short*1, 125)
-		self.gr_sig_source_x_0 = gr.sig_source_s(125, gr.GR_COS_WAVE, 10, 32767, 0)
+		self.gr_wavfile_sink_0 = gr.wavfile_sink("/tmp/openmind_dump_ch0.wav", 1, 125, 16)
 		self.gr_short_to_float_0_0 = gr.short_to_float()
-		self.gr_short_to_float_0 = gr.short_to_float()
 		self.gr_file_source_0 = gr.file_source(gr.sizeof_short*1, "/tmp/openmind_ch0", True)
 
 		##################################################
 		# Connections
 		##################################################
-		self.connect((self.gr_short_to_float_0, 0), (self.wxgui_scopesink2_0, 0))
-		self.connect((self.gr_throttle_0, 0), (self.gr_short_to_float_0, 0))
-		self.connect((self.gr_sig_source_x_0, 0), (self.gr_throttle_0, 0))
-		self.connect((self.gr_short_to_float_0_0, 0), (self.wxgui_scopesink2_0, 1))
-		self.connect((self.gr_throttle_0_0, 0), (self.gr_short_to_float_0_0, 0))
-		self.connect((self.gr_file_source_0, 0), (self.gr_throttle_0_0, 0))
+		self.connect((self.gr_short_to_float_0_0, 0), (self.wxgui_scopesink2_0, 0))
+		self.connect((self.gr_file_source_0, 0), (self.gr_short_to_float_0_0, 0))
+		self.connect((self.gr_short_to_float_0_0, 0), (self.gr_wavfile_sink_0, 0))
 
 	def get_samp_rate(self):
 		return self.samp_rate
