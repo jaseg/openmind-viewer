@@ -30,6 +30,11 @@
 #include <sys/time.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <unistd.h>
+#include <arpa/inet.h>
 
 #define SAMPLE_BUFFER_LENGTH 64
 #define CHANNEL_NUMBER 4
@@ -37,11 +42,11 @@
 
 static char fifo_prefix[FILENAME_BUFFER_SIZE];
 
-int start(char* device, int* portfd_out);
-int work(int* fifofds, int portfd);
+int start(char *device, int *portfd_out);
+int work(struct sockaddr_in *sas, int *fifofds, int portfd);
 void start_refresh_timeout(struct timeval *arg);
-void help(char* argv);
-void graceful_exit(int signal);
+void help(char *argv);
+void graceful_exit(int code);
 
 int main(int argc, char** argv){
 	//Parse the arguments
@@ -60,20 +65,16 @@ int main(int argc, char** argv){
 	//Open the files
 	//printf("Channel number: %i\n", CHANNEL_NUMBER);
 	//printf("Creating fifos\n");
+	struct sockaddr_in sas[CHANNEL_NUMBER];
 	int socks[CHANNEL_NUMBER];
 	for (int i=0; i<CHANNEL_NUMBER; i++){
 		//printf("Creating fifo %i\n", i);
-		int sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
-		struct sockaddr_in sa; 
-		char buffer[1024];
-	    ssize_t recsize;
-		socklen_t fromlen;
-		memset(&sa, 0, sizeof sa);
-		sa.sin_family = AF_INET;
-		sa.sin_addr.s_addr = inet_addr("127.0.0.1");
-		sa.sin_port = htons(atoi(argv[2]));
-	    fromlen = sizeof(sa);
-		bind(sock,(struct sockaddr *)&sa, sizeof(sa));
+		socks[i] = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+		memset(sas+i, 0, sizeof(struct sockaddr_in));
+		sas[i].sin_family = AF_INET;
+		sas[i].sin_addr.s_addr = inet_addr("127.0.0.1");
+		sas[i].sin_port = htons(atoi(argv[2])+i);
+		bind(socks[i],(struct sockaddr *)sas+i, sizeof(struct sockaddr_in));
 	}
 	//printf("Installing signal handlers\n");
 	signal(SIGTERM, &graceful_exit);
@@ -83,7 +84,7 @@ int main(int argc, char** argv){
 	int run = 0;
 	do{
 		//printf("Calling worker\n");
-		error_code = work(fifofds, portfd);
+		error_code = work(sas, socks, portfd);
 		if(run > 0){ //The first line is usually nonsense
 			switch(error_code){
 			case -1:
@@ -100,23 +101,15 @@ int main(int argc, char** argv){
 	graceful_exit(23);
 }
 
-void graceful_exit(int signal){
-	for(int i=0; i<CHANNEL_NUMBER; i++){
-		char fifoname[FILENAME_BUFFER_SIZE];
-		snprintf(fifoname, FILENAME_BUFFER_SIZE, "%s_ch%i", fifo_prefix, i);
-		if(unlink(fifoname) == -1){
-			printf("Cannot remove fifo %s: error code %i\n", fifoname, errno);
-			//exit(errno);
-		}
-	}
-	exit(0);
+void graceful_exit(int code){
+	exit(code);
 }
 
 void help(char* argv0){
 	printf("openmind buspirate to fifo translator\nUsage: %s [buspirate device] [fifo prefix]\n", argv0);
 }
 
-int work (int* fifofds, int portfd){
+int work (struct sockaddr_in *sas, int* socks, int portfd){
 	char buf[SAMPLE_BUFFER_LENGTH]; //should be enough for at least 8ch
 	char* bufp = 0;
 	int error_code;
@@ -176,12 +169,8 @@ int work (int* fifofds, int portfd){
 		char* endptr;
 		//FIXME The following line is pretty certainly crap inherited from previous versions of this code.
 		short sample = (short int)(strtol(token, &endptr, 16));// /(ADS_VREF/((2^15)-1.0F)));
-		if(write(fifofds[i], (char*)&sample, 1) < 0){
-				printf("Data write error. errno: %i\n", errno);
-				return 3; //write error
-		}
-		if(write(fifofds[i], (((char*)&sample)+1), 1) < 0){
-				printf("Data write error. errno: %i\n", errno);
+		if(sendto(socks[i], (char*)&sample, 2, 0, (struct sockaddr *)sas+i, sizeof(struct sockaddr_in)) < 0){
+				printf("Data send error. errno: %i\n", errno);
 				return 3; //write error
 		}
 		if(*endptr != 0){

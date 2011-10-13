@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Top Block
-# Generated: Thu Oct 13 21:55:05 2011
+# Generated: Thu Oct 13 23:23:17 2011
 ##################################################
 
 from gnuradio import eng_notation
@@ -41,16 +41,14 @@ class top_block(grc_wxgui.top_block_gui):
 			y_axis_label="Counts",
 		)
 		self.Add(self.wxgui_scopesink2_0.win)
-		self.gr_wavfile_sink_0 = gr.wavfile_sink("/tmp/openmind_dump_ch0.wav", 1, 125, 16)
+		self.gr_udp_source_1 = gr.udp_source(gr.sizeof_short*1, "127.0.0.1", 1235, 2, True, True)
 		self.gr_short_to_float_0_0 = gr.short_to_float()
-		self.gr_file_source_0 = gr.file_source(gr.sizeof_short*1, "/tmp/openmind_ch0", True)
 
 		##################################################
 		# Connections
 		##################################################
+		self.connect((self.gr_udp_source_1, 0), (self.gr_short_to_float_0_0, 0))
 		self.connect((self.gr_short_to_float_0_0, 0), (self.wxgui_scopesink2_0, 0))
-		self.connect((self.gr_file_source_0, 0), (self.gr_short_to_float_0_0, 0))
-		self.connect((self.gr_short_to_float_0_0, 0), (self.gr_wavfile_sink_0, 0))
 
 	def get_samp_rate(self):
 		return self.samp_rate
